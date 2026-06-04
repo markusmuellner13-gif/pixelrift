@@ -68,9 +68,10 @@ export default class MainMenuScene extends Phaser.Scene {
     this.tweens.add({ targets: playBtn, alpha: 0.2, duration: 600, yoyo: true, repeat: -1 });
 
     // Controls hint
-    this.add.text(8, height - 10, '←→ Move  ↑/SPACE Jump  Z Run  X Fire', {
-      fontSize: '5px', fontFamily: 'monospace', color: '#888888',
-    });
+    this.add.text(width / 2, height - 10,
+      '⌨ ←→/WASD Move  ↑/W/Space Jump  Z/Shift Run  X Fire  |  🎮 Left Stick A B X Start', {
+      fontSize: '5px', fontFamily: 'monospace', color: '#666688',
+    }).setOrigin(0.5);
 
     playMusic('menu');
     this._selectAnimTimer = 0;

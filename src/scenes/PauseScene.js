@@ -48,8 +48,11 @@ export default class PauseScene extends Phaser.Scene {
     });
 
     // Controls reminder
-    this.add.text(width / 2, height - 16, '← → Move | ↑/SPACE Jump | Z Run | X Fire | ESC Pause', {
+    this.add.text(width / 2, height - 20, '⌨  ←→/WASD Move  ↑/W/Space Jump  Z/Shift Run  X Fire  ESC Pause', {
       fontSize: '5px', fontFamily: 'monospace', color: '#666688',
+    }).setOrigin(0.5).setScrollFactor(0);
+    this.add.text(width / 2, height - 10, '🎮 Left Stick/D-Pad Move  A Jump  B Run  X Fire  Start Pause', {
+      fontSize: '5px', fontFamily: 'monospace', color: '#556644',
     }).setOrigin(0.5).setScrollFactor(0);
 
     this.input.keyboard.once('keydown-ESC', () => this._resume());

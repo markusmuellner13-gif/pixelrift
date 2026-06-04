@@ -1,4 +1,4 @@
-import { COLORS, COYOTE_TIME, JUMP_BUFFER_TIME, PLAYER_SPEED, PLAYER_RUN_SPEED, PLAYER_JUMP_VEL, INVINCIBILITY_DURATION, STAR_DURATION } from '../config.js';
+import { COYOTE_TIME, JUMP_BUFFER_TIME, PLAYER_SPEED, PLAYER_RUN_SPEED, PLAYER_JUMP_VEL, INVINCIBILITY_DURATION, STAR_DURATION } from '../config.js';
 import { SFX } from '../systems/AudioSystem.js';
 import QuestSystem from '../systems/QuestSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
@@ -16,10 +16,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.hasStar = false;
     this.isDead = false;
     this.isGrounded = false;
-    this.isRunning = false;
     this.facingRight = true;
     this.wasOnGround = false;
-    this.storedJump = false;
 
     this.coyoteTimer = 0;
     this.jumpBufferTimer = 0;
@@ -34,7 +32,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this._setupBody();
     this._setupAnimations();
-
     this.setDepth(10);
   }
 
@@ -61,71 +58,62 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         anims.create({ key, frames: frames.map(f => ({ key: f })), frameRate: fr, repeat });
       }
     };
-    safe('nova_small_walk', ['nova_small_walk0','nova_small_walk1'], 8, -1);
+    safe('nova_small_walk', ['nova_small_walk0', 'nova_small_walk1'], 8, -1);
     safe('nova_small_idle', ['nova_small_idle'], 1, -1);
     safe('nova_small_jump', ['nova_small_jump'], 1, -1);
-    safe('nova_big_walk', ['nova_big_idle','nova_big_idle'], 8, -1);
-    safe('nova_big_idle', ['nova_big_idle'], 1, -1);
-    safe('nova_big_jump', ['nova_big_jump'], 1, -1);
-    safe('nova_fire_walk', ['nova_fire_idle','nova_fire_idle'], 8, -1);
-    safe('nova_fire_idle', ['nova_fire_idle'], 1, -1);
-    safe('nova_fire_jump', ['nova_big_jump'], 1, -1);
+    safe('nova_big_walk',   ['nova_big_idle', 'nova_big_idle'], 8, -1);
+    safe('nova_big_idle',   ['nova_big_idle'], 1, -1);
+    safe('nova_big_jump',   ['nova_big_jump'], 1, -1);
+    safe('nova_fire_walk',  ['nova_fire_idle', 'nova_fire_idle'], 8, -1);
+    safe('nova_fire_idle',  ['nova_fire_idle'], 1, -1);
+    safe('nova_fire_jump',  ['nova_big_jump'], 1, -1);
   }
 
   setFireballs(group) { this.fireballs = group; }
 
-  update(delta, cursors, runKey, fireKey) {
+  /** @param {import('../systems/InputManager.js').default} input */
+  update(delta, input) {
     if (this.isDead) return;
 
-    const dt = delta / 1000;
     const body = this.body;
     const onGround = body.blocked.down;
 
     // Coyote time
     if (onGround) {
       this.coyoteTimer = COYOTE_TIME;
-      this.wasOnGround = true;
     } else {
       this.coyoteTimer = Math.max(0, this.coyoteTimer - delta);
     }
 
-    // Jump buffer
-    const jumpPressed = Phaser.Input.Keyboard.JustDown(cursors.up) ||
-                        Phaser.Input.Keyboard.JustDown(cursors.space);
-    if (jumpPressed) this.jumpBufferTimer = JUMP_BUFFER_TIME;
+    // Jump buffer — queue a jump if pressed just before landing
+    if (input.jumpJustDown) this.jumpBufferTimer = JUMP_BUFFER_TIME;
     else this.jumpBufferTimer = Math.max(0, this.jumpBufferTimer - delta);
 
     this.isGrounded = onGround;
-
-    // Stomp combo reset when landing normally
-    if (onGround && !this.wasOnGround) {
-      // just landed
-    }
     if (onGround) this.stomboCombo = 0;
 
     // Horizontal movement
-    const left  = cursors.left.isDown;
-    const right = cursors.right.isDown;
-    const run   = runKey && runKey.isDown;
+    const left  = input.left;
+    const right = input.right;
+    const run   = input.run;
     const speed = run ? PLAYER_RUN_SPEED : PLAYER_SPEED;
-    this.isRunning = run && (left || right);
 
-    if (left) {
+    if (left && !right) {
       body.setVelocityX(-speed);
       this.setFlipX(true);
       this.facingRight = false;
-    } else if (right) {
+    } else if (right && !left) {
       body.setVelocityX(speed);
       this.setFlipX(false);
       this.facingRight = true;
     } else {
+      // Decelerate smoothly
       body.setVelocityX(body.velocity.x * 0.75);
       if (Math.abs(body.velocity.x) < 5) body.setVelocityX(0);
     }
 
-    // Jump
-    const canJump = this.coyoteTimer > 0;
-    if (this.jumpBufferTimer > 0 && canJump) {
+    // Jump — coyote time + jump buffer for forgiving feel
+    if (this.jumpBufferTimer > 0 && this.coyoteTimer > 0) {
       const jv = this.state === PLAYER_STATE.SMALL ? PLAYER_JUMP_VEL : PLAYER_JUMP_VEL - 30;
       body.setVelocityY(jv);
       this.coyoteTimer = 0;
@@ -136,13 +124,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this._emitDust();
     }
 
-    // Variable jump height — release early for lower jump
-    if (!cursors.up.isDown && !cursors.space?.isDown && body.velocity.y < -100) {
-      body.setVelocityY(body.velocity.y + 30);
+    // Variable jump height — release early = lower arc
+    if (!input.jumpHeld && body.velocity.y < -100) {
+      body.setVelocityY(body.velocity.y + 32);
     }
 
-    // Fire
-    if (this.state === PLAYER_STATE.FIRE && fireKey && Phaser.Input.Keyboard.JustDown(fireKey)) {
+    // Fireball
+    if (this.state === PLAYER_STATE.FIRE && input.fireJustDown) {
       this._shootFireball();
     }
 
@@ -159,21 +147,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.hasStar) {
       this.starTimer -= delta;
       const t = this.scene.time.now;
-      this.setTint(Phaser.Display.Color.HSLToColor(((t / 100) % 1), 1, 0.6).color);
+      this.setTint(Phaser.Display.Color.HSLToColor((t / 100) % 1, 1, 0.6).color);
       if (this.starTimer <= 0) {
         this.hasStar = false;
         this.clearTint();
-        // Revert music
         this.scene.events.emit('starEnd');
       }
     }
 
     if (this.fireballCooldown > 0) this.fireballCooldown -= delta;
 
-    // Keep in world horizontal bounds
+    // World left boundary
     if (this.x < 8) this.x = 8;
 
-    // Animate
     this._updateAnimation(onGround, left || right);
     this.wasOnGround = onGround;
   }
@@ -195,6 +181,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       if (this.state === PLAYER_STATE.SMALL) {
         this.grow();
         SFX.powerup();
+      } else {
+        // Already big — score bonus instead
+        this.scene.events.emit('scoreAdd', 500, this.x, this.y);
       }
     } else if (type === 'fireflower') {
       this.state = PLAYER_STATE.FIRE;

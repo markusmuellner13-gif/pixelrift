@@ -1,0 +1,52 @@
+appId: com.pixelrift.game
+productName: PixelRift
+copyright: "Copyright © 2026 PixelRift"
+
+directories:
+  output: release
+  buildResources: public/icons
+
+files:
+  - dist/**
+  - electron/**
+  - package.json
+  - "!node_modules/**"
+  - "!src/**"
+  - "!*.md"
+  - "!.github/**"
+
+icon: public/icons/icon-192.png
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: public/icons/icon-192.png
+  requestedExecutionLevel: asInvoker
+
+nsis:
+  oneClick: true
+  allowToChangeInstallationDirectory: false
+  installerIcon: public/icons/icon-192.png
+  uninstallerIcon: public/icons/icon-192.png
+  installerHeaderIcon: public/icons/icon-192.png
+  deleteAppDataOnUninstall: false
+
+mac:
+  target:
+    - dmg
+    - zip
+  category: public.app-category.games
+  icon: public/icons/icon-192.png
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Game
+  icon: public/icons/icon-192.png
+
+publish:
+  provider: github
+  owner: markusmuellner13-gif
+  repo: pixelrift
