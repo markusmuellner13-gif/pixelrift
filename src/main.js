@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_W, GAME_H, SCENES } from './config.js';
+import { GAME_W, GAME_H } from './config.js';
 import BootScene from './scenes/BootScene.js';
 import MainMenuScene from './scenes/MainMenuScene.js';
 import WorldMapScene from './scenes/WorldMapScene.js';
@@ -19,16 +19,13 @@ const config = {
   backgroundColor: '#0d0d1a',
   pixelArt: true,
   antialias: false,
+  // Text rendered with canvas API uses its own antialiasing (unaffected by pixelArt:true)
+  // so fonts always look sharp regardless of this setting
   physics: {
     default: 'arcade',
-    arcade: {
-      gravity: { y: 900 },
-      debug: false
-    }
+    arcade: { gravity: { y: 900 }, debug: false },
   },
-  input: {
-    gamepad: true,
-  },
+  input: { gamepad: true },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -36,17 +33,20 @@ const config = {
     height: GAME_H,
   },
   scene: [
-    BootScene,
-    MainMenuScene,
-    WorldMapScene,
-    GameScene,
-    UIScene,
-    PauseScene,
-    LevelCompleteScene,
-    GameOverScene,
-    LeaderboardScene,
-    DailyChallengeScene,
-  ]
+    BootScene, MainMenuScene, WorldMapScene,
+    GameScene, UIScene, PauseScene,
+    LevelCompleteScene, GameOverScene,
+    LeaderboardScene, DailyChallengeScene,
+  ],
 };
 
-new Phaser.Game(config);
+// Wait for Press Start 2P to load before Phaser renders any text
+// This prevents a brief flash of incorrect font on first render
+async function start() {
+  try {
+    await document.fonts.load('16px "Press Start 2P"');
+  } catch { /* font CDN unreachable — fall back to monospace, game still works */ }
+  new Phaser.Game(config);
+}
+
+start();

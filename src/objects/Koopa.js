@@ -1,4 +1,5 @@
 import { SFX } from '../systems/AudioSystem.js';
+import { FONT } from '../config.js';
 import { ENEMY_STOMP_SCORE, ENEMY_MULTI_BONUS } from '../config.js';
 
 const DETECT_RADIUS = 80;
@@ -73,7 +74,7 @@ export default class Koopa extends Phaser.Physics.Arcade.Sprite {
 
   _showExclamation() {
     this._exclamation = this.scene.add.text(this.x, this.y - 18, '!', {
-      fontSize: '10px', fontFamily: 'monospace', color: '#ffaa00',
+      fontSize: '10px', fontFamily: FONT, color: '#ffaa00',
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5).setDepth(12);
     this.scene.tweens.add({ targets: this._exclamation, y: this._exclamation.y - 5, duration: 200, yoyo: true });

@@ -8,35 +8,235 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-fullscreen" />
   <meta name="apple-mobile-web-app-title" content="PixelRift" />
   <meta name="theme-color" content="#0d0d1a" />
-  <meta name="description" content="PixelRift - Leap. Explore. Conquer. A pixel-art 2D platformer." />
+  <meta name="description" content="PixelRift — Leap. Explore. Conquer. A pixel-art 2D platformer." />
   <title>PixelRift</title>
+
   <link rel="manifest" href="./manifest.json" />
   <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+  <!-- Press Start 2P: free pixel-game font (SIL Open Font License) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=block" rel="stylesheet" />
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     html, body {
       width: 100%; height: 100%;
       background: #0d0d1a;
       overflow: hidden;
       touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
     }
+
     #game-container {
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
     }
-    canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      /* Prevent rubber-band scroll on iOS */
+      touch-action: none;
+    }
+
+    /* ── Portrait warning ── */
+    #rotate-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0d0d1a;
+      z-index: 99999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      color: #ffd700;
+      font-family: 'Press Start 2P', monospace;
+      text-align: center;
+      padding: 24px;
+    }
+    #rotate-overlay .rot-icon {
+      font-size: 60px;
+      display: block;
+      animation: rock 1.4s ease-in-out infinite;
+    }
+    #rotate-overlay .rot-title {
+      font-size: 14px;
+      line-height: 2;
+      color: #ffd700;
+    }
+    #rotate-overlay .rot-sub {
+      font-size: 9px;
+      color: #aaaacc;
+      line-height: 2;
+    }
+    @keyframes rock {
+      0%,100% { transform: rotate(0deg); }
+      30%      { transform: rotate(-25deg); }
+      70%      { transform: rotate(25deg); }
+    }
+    /* Show overlay when portrait AND small screen (phone/tablet) */
+    @media (orientation: portrait) and (max-device-width: 1280px) {
+      #rotate-overlay { display: flex; }
+    }
+    @media (orientation: landscape) {
+      #rotate-overlay { display: none !important; }
+    }
+
+    /* ── PWA install banner (Android Chrome) ── */
+    #install-banner {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #1a1a2e;
+      border-top: 2px solid #ffd700;
+      padding: 10px 16px;
+      z-index: 9998;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #ffffff;
+    }
+    #install-banner.show { display: flex; }
+    #install-btn {
+      background: #ffd700; color: #0d0d1a;
+      border: none; padding: 8px 14px;
+      font-family: 'Press Start 2P', monospace; font-size: 8px;
+      cursor: pointer; white-space: nowrap;
+      border-radius: 2px;
+    }
+    #dismiss-btn {
+      background: transparent; color: #888888;
+      border: none; font-size: 20px; cursor: pointer;
+      line-height: 1; padding: 0 4px;
+    }
+
+    /* ── iOS install hint (one-time, shown for 4s) ── */
+    #ios-hint {
+      display: none;
+      position: fixed;
+      bottom: 16px; left: 50%; transform: translateX(-50%);
+      background: #1a1a2e;
+      border: 2px solid #4488ff;
+      padding: 12px 18px;
+      z-index: 9997;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #aaddff;
+      text-align: center;
+      line-height: 2;
+      white-space: nowrap;
+      animation: fadeup 0.4s ease-out;
+    }
+    @keyframes fadeup { from { opacity:0; transform: translate(-50%,12px); } to { opacity:1; transform: translate(-50%,0); } }
   </style>
 </head>
 <body>
+
+  <!-- Portrait warning overlay -->
+  <div id="rotate-overlay" aria-hidden="true">
+    <span class="rot-icon">📱</span>
+    <p class="rot-title">ROTATE YOUR<br>DEVICE</p>
+    <p class="rot-sub">PixelRift needs<br>landscape mode</p>
+  </div>
+
+  <!-- Android Chrome PWA install banner -->
+  <div id="install-banner" role="banner">
+    <span>⬇ Add PixelRift to your home screen!</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="install-btn">INSTALL</button>
+      <button id="dismiss-btn" aria-label="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <!-- iOS install hint (shown once) -->
+  <div id="ios-hint" role="status"></div>
+
   <div id="game-container"></div>
+
   <script type="module" src="./src/main.js"></script>
+
   <script>
+    // ── Landscape orientation lock ─────────────────────────────────
+    async function lockLandscape() {
+      try {
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          await screen.orientation.lock('landscape');
+        }
+      } catch { /* browser may require fullscreen first – CSS overlay handles fallback */ }
+    }
+    // Attempt on first user interaction (required by browsers)
+    document.addEventListener('pointerdown', lockLandscape, { once: true });
+    document.addEventListener('keydown',     lockLandscape, { once: true });
+    // Also attempt on visibility change (e.g. returning to tab)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) lockLandscape();
+    });
+
+    // ── Android PWA install prompt ─────────────────────────────────
+    let deferredPrompt = null;
+    const banner     = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-btn');
+    const dismissBtn = document.getElementById('dismiss-btn');
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show banner 4s after load so it doesn't interrupt boot
+      setTimeout(() => { if (deferredPrompt) banner.classList.add('show'); }, 4000);
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      banner.classList.remove('show');
+    });
+
+    dismissBtn.addEventListener('click', () => {
+      banner.classList.remove('show');
+      deferredPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      banner.classList.remove('show');
+    });
+
+    // ── iOS "Add to Home Screen" hint (shown once per session) ─────
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.navigator.standalone === true;
+    const iosHint = document.getElementById('ios-hint');
+
+    if (isIOS && !isStandalone && !sessionStorage.getItem('iosHintShown')) {
+      sessionStorage.setItem('iosHintShown', '1');
+      iosHint.textContent = '📲 Tap Share → Add to Home Screen to install';
+      iosHint.style.display = 'block';
+      setTimeout(() => {
+        iosHint.style.transition = 'opacity 0.5s';
+        iosHint.style.opacity = '0';
+        setTimeout(() => { iosHint.style.display = 'none'; }, 500);
+      }, 5000);
+    }
+
+    // ── Service Worker ─────────────────────────────────────────────
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
-          .catch(err => console.warn('SW reg failed:', err));
+          .catch(err => console.warn('SW registration failed:', err));
       });
     }
+
+    // ── Prevent pull-to-refresh and overscroll on mobile ──────────
+    document.body.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
   </script>
 </body>
 </html>

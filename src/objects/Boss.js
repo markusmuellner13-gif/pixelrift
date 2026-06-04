@@ -1,4 +1,4 @@
-import { BOSS_HP, BOSS_SHOOT_INTERVAL_BASE, BOSS_PROJ_SPEED } from '../config.js';
+import { BOSS_HP, BOSS_SHOOT_INTERVAL_BASE, BOSS_PROJ_SPEED, FONT } from '../config.js';
 import { SFX } from '../systems/AudioSystem.js';
 
 const BOSS_CONFIG = {
@@ -43,8 +43,8 @@ export default class Boss extends Phaser.Physics.Arcade.Sprite {
     this._buildHPBar(scene);
 
     // Phase label
-    this._label = scene.add.text(x, y - 30, cfg.label, {
-      fontSize: '8px', fontFamily: 'monospace', color: '#ff4444',
+    this._label = scene.add.text(x, y - 36, cfg.label, {
+      fontSize: '10px', fontFamily: FONT, color: '#ff4444',
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5).setDepth(9);
 
@@ -58,21 +58,21 @@ export default class Boss extends Phaser.Physics.Arcade.Sprite {
 
   _buildHPBar(scene) {
     const { width } = scene.scale;
-    this._hpBarBg = scene.add.rectangle(width / 2, 22, 90, 10, 0x330000)
+    this._hpBarBg = scene.add.rectangle(width / 2, 50, 120, 12, 0x330000)
       .setScrollFactor(0).setDepth(200);
-    this._hpBarFill = scene.add.rectangle(width / 2 - 44, 22, 88, 8, 0xff2222)
+    this._hpBarFill = scene.add.rectangle(width / 2 - 59, 50, 118, 10, 0xff2222)
       .setScrollFactor(0).setDepth(201).setOrigin(0, 0.5);
-    this._hpLabel = scene.add.text(width / 2, 14, `⚠ ${this.cfg.label}`, {
-      fontSize: '7px', fontFamily: 'monospace', color: '#ff6666',
+    this._hpLabel = scene.add.text(width / 2, 38, `⚠ ${this.cfg.label}`, {
+      fontSize: '9px', fontFamily: FONT, color: '#ff6666',
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5).setScrollFactor(0).setDepth(201);
   }
 
   _showIntroText(scene) {
     const { width, height } = scene.scale;
-    const txt = scene.add.text(width / 2, height / 2, `⚠ ${this.cfg.label} APPEARS!`, {
-      fontSize: '14px', fontFamily: 'monospace', color: '#ff4444',
-      stroke: '#000', strokeThickness: 4,
+    const txt = scene.add.text(width / 2, height / 2, `⚠ ${this.cfg.label}\nAPPEARS!`, {
+      fontSize: '16px', fontFamily: FONT, color: '#ff4444',
+      stroke: '#000', strokeThickness: 4, align: 'center',
     }).setOrigin(0.5).setScrollFactor(0).setDepth(300).setAlpha(0);
     scene.tweens.add({
       targets: txt, alpha: 1, y: height / 2 - 10,
@@ -221,7 +221,7 @@ export default class Boss extends Phaser.Physics.Arcade.Sprite {
     const msg = msgs[Math.min(this.phase - 1, msgs.length - 1)];
     const { width, height } = this.scene.scale;
     const txt = this.scene.add.text(width / 2, height / 2 - 20, `⚠ ${msg}`, {
-      fontSize: '12px', fontFamily: 'monospace', color: '#ff8800',
+      fontSize: '12px', fontFamily: FONT, color: '#ff8800',
       stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5).setScrollFactor(0).setDepth(300).setAlpha(0);
     this.scene.tweens.add({

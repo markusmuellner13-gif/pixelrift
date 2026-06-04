@@ -1,4 +1,4 @@
-import { SCENES, LEVELS_PER_WORLD } from '../config.js';
+import { SCENES, LEVELS_PER_WORLD, FONT } from '../config.js';
 import { playMusic, SFX } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
 import QuestSystem from '../systems/QuestSystem.js';
@@ -26,25 +26,45 @@ export default class WorldMapScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     this.add.rectangle(width / 2, height / 2, width, height, 0x0d0d1a);
+    // Stars
+    for (let i = 0; i < 60; i++) {
+      this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'star_twinkle')
+        .setAlpha(Math.random() * 0.4 + 0.1);
+    }
 
-    this.add.text(width / 2, 14, 'SELECT LEVEL', {
-      fontSize: '10px', fontFamily: 'monospace', color: '#ffd700',
-      stroke: '#000', strokeThickness: 2,
+    this.add.text(width / 2, 10, 'SELECT LEVEL', {
+      fontSize: '13px', fontFamily: FONT,
+      color: '#ffd700', stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5);
 
     this._worldPanels = [];
-    this._levelDots = [];
-    this._w4unlocked = world4Unlocked();
+    this._levelDots   = [];
+    this._w4unlocked  = world4Unlocked();
     this._renderWorlds(width, height);
     this._renderLevelSelect(width, height);
 
-    // Back button
-    const back = this.add.text(10, 10, '< BACK', {
-      fontSize: '7px', fontFamily: 'monospace', color: '#aaaaaa',
-    }).setInteractive();
+    // Back
+    const back = this.add.text(10, 8, '< BACK', {
+      fontSize: '9px', fontFamily: FONT, color: '#aaaaaa',
+    }).setInteractive({ useHandCursor: true });
+    back.on('pointerover', () => back.setColor('#ffffff'));
+    back.on('pointerout',  () => back.setColor('#aaaaaa'));
     back.on('pointerdown', () => { SFX.menu_select(); this.scene.start(SCENES.MENU); });
 
-    // Keyboard
+    // Quest count
+    const doneCount = QuestSystem.completedCount();
+    this.add.text(width - 8, height - 8, `QUESTS: ${doneCount}/12`, {
+      fontSize: '8px', fontFamily: FONT, color: '#aaffaa',
+    }).setOrigin(1, 1);
+
+    // World 4 teaser
+    if (!this._w4unlocked) {
+      this.add.text(width / 2, height - 18, '★ 3-STAR ALL LEVELS TO UNLOCK STAR DIMENSION', {
+        fontSize: '7px', fontFamily: FONT, color: '#8844aa',
+      }).setOrigin(0.5, 1);
+    }
+
+    // Keyboard nav
     this._keys = this.input.keyboard.addKeys({
       left: Phaser.Input.Keyboard.KeyCodes.LEFT,
       right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
@@ -54,42 +74,27 @@ export default class WorldMapScene extends Phaser.Scene {
       esc: Phaser.Input.Keyboard.KeyCodes.ESC,
     });
 
-    // Quest progress
-    const doneCount = QuestSystem.completedCount();
-    this.add.text(width - 8, height - 10, `Quests: ${doneCount}/12`, {
-      fontSize: '6px', fontFamily: 'monospace', color: '#aaffaa',
-    }).setOrigin(1, 1);
-
-    // World 4 teaser if not yet unlocked
-    if (!this._w4unlocked) {
-      this.add.text(width / 2, height - 20, '★ 3-star all levels to unlock STAR DIMENSION!', {
-        fontSize: '5px', fontFamily: 'monospace', color: '#8844aa',
-      }).setOrigin(0.5);
-    }
-
     playMusic('menu');
     this._refreshHighlight();
   }
 
   _renderWorlds(width, height) {
-    const WORLDS = this._w4unlocked ? 4 : 3;
-    for (let w = 0; w < WORLDS; w++) {
-      const wx = 50 + w * 130;
-      const wy = 50;
+    const totalWorlds = this._w4unlocked ? 4 : 3;
+    const spacing = (width - 40) / totalWorlds;
 
-      const panel = this.add.rectangle(wx, wy, 110, 30, WORLD_COLORS[w], 0.8)
-        .setStrokeStyle(2, 0xffffff).setInteractive();
-      const label = this.add.text(wx, wy, `W${w + 1}: ${WORLD_NAMES[w]}`, {
-        fontSize: '6px', fontFamily: 'monospace', color: '#ffffff',
+    for (let w = 0; w < totalWorlds; w++) {
+      const wx = 20 + spacing * w + spacing / 2;
+      const wy = 44;
+
+      const panel = this.add.rectangle(wx, wy, spacing - 8, 28, WORLD_COLORS[w], 0.85)
+        .setStrokeStyle(2, 0xffffff).setInteractive({ useHandCursor: true });
+
+      this.add.text(wx, wy - 5, `W${w + 1}`, {
+        fontSize: '10px', fontFamily: FONT, color: '#ffffff',
       }).setOrigin(0.5);
 
-      // Stars for this world
-      let totalStars = 0;
-      for (let l = 1; l <= LEVELS_PER_WORLD; l++) {
-        totalStars += SaveSystem.getLevel(w + 1, l).stars || 0;
-      }
-      this.add.text(wx, wy + 12, '⭐'.repeat(Math.min(totalStars, 5)), {
-        fontSize: '6px', fontFamily: 'monospace', color: '#ffd700',
+      this.add.text(wx, wy + 7, WORLD_NAMES[w].substring(0, 12), {
+        fontSize: '6px', fontFamily: FONT, color: '#ffffff',
       }).setOrigin(0.5);
 
       const worldIdx = w + 1;
@@ -100,8 +105,7 @@ export default class WorldMapScene extends Phaser.Scene {
         this._refreshHighlight();
         SFX.menu_move();
       });
-
-      this._worldPanels.push({ panel, label, world: worldIdx });
+      this._worldPanels.push({ panel, world: worldIdx });
     }
   }
 
@@ -109,88 +113,81 @@ export default class WorldMapScene extends Phaser.Scene {
     this._levelDots.forEach(d => d.container?.destroy());
     this._levelDots = [];
 
-    const world = this._selectedWorld;
-    const startX = 40;
-    const spacing = (width - 80) / (LEVELS_PER_WORLD - 1);
-    const y = 150;
+    const world   = this._selectedWorld;
+    const startX  = 30;
+    const spacing = (width - 60) / (LEVELS_PER_WORLD - 1);
+    const y       = 130;
 
-    // Path line
+    // Path
     const g = this.add.graphics();
-    g.lineStyle(3, 0x444466, 1);
+    g.lineStyle(3, 0x333355, 1);
     g.beginPath();
     g.moveTo(startX, y);
     g.lineTo(startX + spacing * (LEVELS_PER_WORLD - 1), y);
     g.strokePath();
 
     for (let l = 1; l <= LEVELS_PER_WORLD; l++) {
-      const x = startX + (l - 1) * spacing;
+      const x        = startX + (l - 1) * spacing;
       const unlocked = SaveSystem.isLevelUnlocked(world, l);
-      const prog = SaveSystem.getLevel(world, l);
-      const stars = prog.stars || 0;
+      const prog     = SaveSystem.getLevel(world, l);
+      const stars    = prog.stars || 0;
 
       const container = this.add.container(x, y);
-
-      const dot = this.add.circle(0, 0, 14, unlocked ? WORLD_COLORS[world - 1] : 0x333355)
-        .setStrokeStyle(2, unlocked ? 0xffffff : 0x555577);
+      const dotColor  = l === 5 ? 0xaa2222 : WORLD_COLORS[world - 1];
+      const dot = this.add.circle(0, 0, 16, unlocked ? dotColor : 0x222244)
+        .setStrokeStyle(2, unlocked ? 0xffffff : 0x444466);
       container.add(dot);
 
-      const numTxt = this.add.text(0, 0, l === 5 ? '!' : `${l}`, {
-        fontSize: '8px', fontFamily: 'monospace',
-        color: unlocked ? '#ffffff' : '#555577',
-      }).setOrigin(0.5);
-      container.add(numTxt);
+      const label = l === 5 ? '!' : `${l}`;
+      container.add(this.add.text(0, 0, label, {
+        fontSize: '10px', fontFamily: FONT, color: unlocked ? '#ffffff' : '#444466',
+      }).setOrigin(0.5));
 
-      // Stars below dot
+      // Stars
       if (stars > 0) {
-        const starTxt = this.add.text(0, 18, '★'.repeat(stars), {
-          fontSize: '6px', fontFamily: 'monospace', color: '#ffd700',
-        }).setOrigin(0.5);
-        container.add(starTxt);
+        container.add(this.add.text(0, 22, '★'.repeat(stars), {
+          fontSize: '8px', fontFamily: FONT, color: '#ffd700',
+        }).setOrigin(0.5));
       }
 
-      const levelName = this._getLevelName(world, l);
-      const nameTxt = this.add.text(0, -22, levelName, {
-        fontSize: '5px', fontFamily: 'monospace', color: '#aaaacc',
-      }).setOrigin(0.5);
-      container.add(nameTxt);
+      // Level name above dot
+      container.add(this.add.text(0, -26, this._getLevelName(world, l), {
+        fontSize: '6px', fontFamily: FONT, color: '#aaaacc',
+      }).setOrigin(0.5));
 
       if (unlocked) {
-        dot.setInteractive(new Phaser.Geom.Circle(0, 0, 14), Phaser.Geom.Circle.Contains);
+        dot.setInteractive(new Phaser.Geom.Circle(0, 0, 16), Phaser.Geom.Circle.Contains);
         dot.on('pointerover', () => { this._selectedLevel = l; this._refreshHighlight(); });
         dot.on('pointerdown', () => { this._selectedLevel = l; this._startLevel(); });
       }
-
       this._levelDots.push({ container, dot, level: l, unlocked });
     }
 
     // Info panel
-    if (this._infoPanel) this._infoPanel.destroy();
+    this._infoPanel?.destroy();
     const prog = SaveSystem.getLevel(world, this._selectedLevel);
-    const bt = prog.bestTime ? `Best: ${prog.bestTime.toFixed(1)}s` : '';
-    this._infoPanel = this.add.text(width / 2, 210, bt, {
-      fontSize: '6px', fontFamily: 'monospace', color: '#aaffaa',
+    const bt   = prog.bestTime ? `BEST: ${prog.bestTime.toFixed(1)}s` : '';
+    this._infoPanel = this.add.text(width / 2, 195, bt, {
+      fontSize: '8px', fontFamily: FONT, color: '#aaffaa',
     }).setOrigin(0.5);
   }
 
   _getLevelName(world, level) {
     const names = {
-      '1-1': 'First Steps', '1-2': 'Underground Caves', '1-3': 'Rolling Hills',
-      '1-4': 'Sky Tower', '1-5': 'Storm Keep',
-      '2-1': 'Scorching Dunes', '2-2': 'Desert Ruins', '2-3': 'Pyramid Peril',
-      '2-4': 'Mirage Falls', '2-5': "Pharaoh's Tomb",
-      '3-1': 'Frostbite Fields', '3-2': 'Blizzard Pass', '3-3': 'Crystal Cavern',
-      '3-4': 'Glacier Gauntlet', '3-5': 'The Frozen King',
+      '1-1':'FIRST STEPS','1-2':'CAVE','1-3':'ROLLING HILLS','1-4':'SKY TOWER','1-5':'STORM KEEP',
+      '2-1':'DUNES','2-2':'RUINS','2-3':'PYRAMID','2-4':'MIRAGE','2-5':'PHARAOH',
+      '3-1':'FROSTBITE','3-2':'BLIZZARD','3-3':'CRYSTAL','3-4':'GLACIER','3-5':'FROZEN KING',
+      '4-1':'HORIZON','4-2':'NEBULA','4-3':'CORE','4-4':'SINGULARITY','4-5':'VOID LORD',
     };
-    return names[`${world}-${level}`] || `Level ${level}`;
+    return names[`${world}-${level}`] || `L${level}`;
   }
 
   _refreshHighlight() {
-    this._levelDots.forEach(({ container, dot, level }) => {
-      const selected = level === this._selectedLevel;
-      container.setScale(selected ? 1.3 : 1);
+    this._levelDots.forEach(({ container, level }) => {
+      container.setScale(level === this._selectedLevel ? 1.3 : 1);
     });
     this._worldPanels.forEach(({ panel, world }) => {
-      panel.setStrokeStyle(world === this._selectedWorld ? 3 : 2,
+      panel.setStrokeStyle(world === this._selectedWorld ? 3 : 1.5,
         world === this._selectedWorld ? 0xffd700 : 0xffffff);
     });
   }
@@ -198,10 +195,7 @@ export default class WorldMapScene extends Phaser.Scene {
   _startLevel() {
     if (!SaveSystem.isLevelUnlocked(this._selectedWorld, this._selectedLevel)) return;
     SFX.menu_select();
-    this.scene.start(SCENES.GAME, {
-      world: this._selectedWorld,
-      level: this._selectedLevel,
-    });
+    this.scene.start(SCENES.GAME, { world: this._selectedWorld, level: this._selectedLevel });
   }
 
   update() {
@@ -209,21 +203,14 @@ export default class WorldMapScene extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(k.right)) {
       const next = Math.min(this._selectedLevel + 1, LEVELS_PER_WORLD);
       if (SaveSystem.isLevelUnlocked(this._selectedWorld, next)) {
-        this._selectedLevel = next;
-        this._refreshHighlight();
-        SFX.menu_move();
+        this._selectedLevel = next; this._refreshHighlight(); SFX.menu_move();
       }
     }
     if (Phaser.Input.Keyboard.JustDown(k.left)) {
-      const prev = Math.max(this._selectedLevel - 1, 1);
-      this._selectedLevel = prev;
-      this._refreshHighlight();
-      SFX.menu_move();
+      this._selectedLevel = Math.max(this._selectedLevel - 1, 1);
+      this._refreshHighlight(); SFX.menu_move();
     }
     if (Phaser.Input.Keyboard.JustDown(k.enter)) this._startLevel();
-    if (Phaser.Input.Keyboard.JustDown(k.esc)) {
-      SFX.menu_select();
-      this.scene.start(SCENES.MENU);
-    }
+    if (Phaser.Input.Keyboard.JustDown(k.esc))  { SFX.menu_select(); this.scene.start(SCENES.MENU); }
   }
 }

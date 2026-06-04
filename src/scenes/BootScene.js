@@ -1,4 +1,4 @@
-import { SCENES } from '../config.js';
+import { SCENES, FONT } from '../config.js';
 import { generateAllTextures, generateIconCanvas } from '../graphics/TextureGenerator.js';
 import { initAudio } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
@@ -9,39 +9,30 @@ export default class BootScene extends Phaser.Scene {
   create() {
     SaveSystem.load();
     initAudio();
-
-    // Generate all game textures procedurally
     generateAllTextures(this);
-
-    // Generate PWA icons programmatically and cache as data URLs
     this._generateIcons();
 
-    // Show brief loading screen
     const { width, height } = this.scale;
-    const bg = this.add.rectangle(width / 2, height / 2, width, height, 0x1a1a2e);
-    const logo = this.add.text(width / 2, height / 2 - 20, 'PIXELRIFT', {
-      fontSize: '28px', fontFamily: 'monospace', color: '#ffd700',
-      stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5);
-    const sub = this.add.text(width / 2, height / 2 + 12, 'Leap. Explore. Conquer.', {
-      fontSize: '8px', fontFamily: 'monospace', color: '#aaaaff',
+    this.add.rectangle(width / 2, height / 2, width, height, 0x1a1a2e);
+
+    this.add.text(width / 2, height / 2 - 24, 'PIXELRIFT', {
+      fontSize: '28px', fontFamily: FONT,
+      color: '#ffd700', stroke: '#000000', strokeThickness: 4,
     }).setOrigin(0.5);
 
-    // Blink
+    const sub = this.add.text(width / 2, height / 2 + 14, 'Leap. Explore. Conquer.', {
+      fontSize: '10px', fontFamily: FONT, color: '#aaaaff',
+    }).setOrigin(0.5);
+
     this.tweens.add({ targets: sub, alpha: 0, duration: 400, yoyo: true, repeat: 3 });
-
-    this.time.delayedCall(1200, () => {
-      this.scene.start(SCENES.MENU);
-    });
+    this.time.delayedCall(1400, () => this.scene.start(SCENES.MENU));
   }
 
   _generateIcons() {
     try {
-      const sizes = [192, 512];
-      sizes.forEach(size => {
+      [192, 512].forEach(size => {
         const canvas = generateIconCanvas(size);
         const url = canvas.toDataURL('image/png');
-        // Set as link element for PWA
         let link = document.querySelector(`link[sizes="${size}x${size}"]`);
         if (!link) {
           link = document.createElement('link');
@@ -51,6 +42,6 @@ export default class BootScene extends Phaser.Scene {
         }
         link.href = url;
       });
-    } catch (e) { /* non-critical */ }
+    } catch { /* non-critical */ }
   }
 }

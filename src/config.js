@@ -1,3 +1,7 @@
+// Game font — Press Start 2P (SIL Open Font License, free to use commercially)
+// Loaded via Google Fonts in index.html; falls back to monospace
+export const FONT = '"Press Start 2P", monospace';
+
 export const TILE = 16;
 export const SCALE = 3;
 export const GAME_W = 480;

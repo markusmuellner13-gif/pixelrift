@@ -1,4 +1,4 @@
-import { SCENES, WORLDS, LEVELS_PER_WORLD } from '../config.js';
+import { SCENES, WORLDS, LEVELS_PER_WORLD, FONT } from '../config.js';
 import { SFX, playMusic } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
 import SupabaseLeaderboard from '../systems/SupabaseLeaderboard.js';
@@ -19,20 +19,20 @@ export default class LevelCompleteScene extends Phaser.Scene {
     }
 
     // Title
-    this.add.text(width / 2, 24, d.daily ? '⭐ DAILY COMPLETE!' : 'LEVEL COMPLETE!', {
-      fontSize: '16px', fontFamily: 'monospace',
+    this.add.text(width / 2, 20, d.daily ? '⭐ DAILY COMPLETE!' : 'LEVEL COMPLETE!', {
+      fontSize: '16px', fontFamily: FONT,
       color: d.daily ? '#ff8800' : '#ffd700', stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, 40, `World ${d.world} – Level ${d.level}`, {
-      fontSize: '8px', fontFamily: 'monospace', color: '#aaaaff',
+    this.add.text(width / 2, 40, `WORLD ${d.world}  LEVEL ${d.level}`, {
+      fontSize: '9px', fontFamily: FONT, color: '#aaaaff',
     }).setOrigin(0.5);
 
     // Stars
     for (let i = 0; i < 3; i++) {
-      const star = this.add.text(width / 2 - 24 + i * 24, 56, '★', {
-        fontSize: '18px', fontFamily: 'monospace',
-        color: i < d.stars ? '#ffd700' : '#333355',
+      const star = this.add.text(width / 2 - 30 + i * 30, 58, '★', {
+        fontSize: '20px', fontFamily: FONT,
+        color: i < d.stars ? '#ffd700' : '#222244',
       }).setOrigin(0.5).setAlpha(0);
       this.time.delayedCall(500 + i * 280, () => {
         this.tweens.add({ targets: star, alpha: 1, scaleX: [0, 1.3, 1], scaleY: [0, 1.3, 1], duration: 300 });
@@ -40,80 +40,84 @@ export default class LevelCompleteScene extends Phaser.Scene {
       });
     }
 
-    // Speedrun / new best
+    // Speedrun
     if (d.elapsed !== undefined) {
       const color = d.isNewBest ? '#55ff55' : '#aaaacc';
-      const bestLabel = d.isNewBest ? '⭐ NEW BEST!' : `Best: ${(d.elapsed).toFixed(2)}s`;
-      this.add.text(width / 2, 76, `Time: ${d.elapsed.toFixed(2)}s  ${bestLabel}`, {
-        fontSize: '6px', fontFamily: 'monospace', color,
+      const label = d.isNewBest ? '  NEW BEST!' : `  BEST: ${d.elapsed.toFixed(2)}s`;
+      this.add.text(width / 2, 82, `TIME: ${d.elapsed.toFixed(2)}s${label}`, {
+        fontSize: '8px', fontFamily: FONT, color,
       }).setOrigin(0.5);
     }
 
-    // Completion percentage
+    // Completion %
     if (d.clearPct !== undefined) {
       const pctColor = d.clearPct === 100 ? '#ffd700' : '#aaaacc';
-      this.add.text(width / 2, 86, `${d.clearPct}% CLEAR${d.clearPct === 100 ? ' — PERFECT!' : ''}`, {
-        fontSize: '6px', fontFamily: 'monospace', color: pctColor,
+      this.add.text(width / 2, 96, `${d.clearPct}% CLEAR${d.clearPct === 100 ? '  PERFECT!' : ''}`, {
+        fontSize: '8px', fontFamily: FONT, color: pctColor,
       }).setOrigin(0.5);
     }
 
     // Score breakdown
     const rows = [
-      ['SCORE',        d.score.toLocaleString()],
-      ['TIME BONUS',   `+${(d.timeBonus  || 0).toLocaleString()}`],
-      ['HEIGHT BONUS', `+${(d.heightBonus|| 0).toLocaleString()}`],
-      ['LIVES',        `× ${d.lives}`],
+      ['SCORE',      d.score.toLocaleString()],
+      ['TIME BONUS', `+${(d.timeBonus   || 0).toLocaleString()}`],
+      ['HT BONUS',   `+${(d.heightBonus || 0).toLocaleString()}`],
+      ['LIVES',      `x ${d.lives}`],
     ];
     rows.forEach(([label, val], i) => {
-      this.add.text(width / 2 - 60, 96 + i * 14, label, {
-        fontSize: '7px', fontFamily: 'monospace', color: '#ccccff',
+      this.add.text(width / 2 - 70, 110 + i * 16, label, {
+        fontSize: '8px', fontFamily: FONT, color: '#ccccff',
       });
-      this.add.text(width / 2 + 60, 96 + i * 14, val, {
-        fontSize: '7px', fontFamily: 'monospace', color: '#ffffff',
+      this.add.text(width / 2 + 70, 110 + i * 16, val, {
+        fontSize: '8px', fontFamily: FONT, color: '#ffffff',
       }).setOrigin(1, 0);
     });
 
-    this.add.rectangle(width / 2, 155, 180, 1, 0x444466);
+    this.add.rectangle(width / 2, 178, 200, 1, 0x444466);
 
     const hs = SaveSystem.get('highScore') || 0;
-    this.add.text(width / 2, 159, `BEST: ${hs.toLocaleString()}`, {
-      fontSize: '7px', fontFamily: 'monospace', color: '#ffaaaa',
+    this.add.text(width / 2, 183, `BEST: ${hs.toLocaleString()}`, {
+      fontSize: '8px', fontFamily: FONT, color: '#ffaaaa',
     }).setOrigin(0.5);
 
-    // Buttons
+    // Action buttons
     const nextWorld = d.level === LEVELS_PER_WORLD ? d.world + 1 : d.world;
     const nextLevel = d.level === LEVELS_PER_WORLD ? 1 : d.level + 1;
     const hasNext   = nextWorld <= WORLDS && SaveSystem.isLevelUnlocked(nextWorld, nextLevel);
 
     const btns = [];
     if (hasNext) btns.push({ label: '▶ NEXT LEVEL', fn: () => this._goTo(nextWorld, nextLevel) });
-    btns.push({ label: '↺ RETRY', fn: () => this._retry() });
-    btns.push({ label: '⌂ WORLD MAP', fn: () => this._worldMap() });
+    btns.push({ label: '↺ RETRY',      fn: () => this._retry() });
+    btns.push({ label: '⌂ WORLD MAP',  fn: () => this._worldMap() });
     if (d.daily) btns.push({ label: '📊 LEADERBOARD', fn: () => this.scene.start(SCENES.LEADERBOARD) });
 
     btns.forEach((b, i) => {
-      const txt = this.add.text(width / 2, 172 + i * 20, b.label, {
-        fontSize: '9px', fontFamily: 'monospace', color: '#ffffff',
-        stroke: '#000', strokeThickness: 2,
+      const txt = this.add.text(width / 2, 196 + i * 22, b.label, {
+        fontSize: '10px', fontFamily: FONT,
+        color: '#ffffff', stroke: '#000', strokeThickness: 2,
       }).setOrigin(0.5).setInteractive({ useHandCursor: true });
       txt.on('pointerover', () => txt.setColor('#ffd700'));
       txt.on('pointerout',  () => txt.setColor('#ffffff'));
       txt.on('pointerdown', () => { SFX.menu_select(); b.fn(); });
     });
 
-    // Auto-next
+    // Auto-next countdown
     if (hasNext) {
       let cd = 7;
-      const at = this.add.text(width / 2, height - 12, `Auto in ${cd}s`, {
-        fontSize: '5px', fontFamily: 'monospace', color: '#445566',
+      const at = this.add.text(width / 2, height - 10, `AUTO NEXT IN ${cd}s`, {
+        fontSize: '7px', fontFamily: FONT, color: '#445566',
       }).setOrigin(0.5);
       this.time.addEvent({
         delay: 1000, repeat: 6,
-        callback: () => { cd--; at.setText(`Auto in ${cd}s`); if (cd <= 0) this._goTo(nextWorld, nextLevel); }
+        callback: () => {
+          cd--;
+          at.setText(`AUTO NEXT IN ${cd}s`);
+          if (cd <= 0) this._goTo(nextWorld, nextLevel);
+        },
       });
     }
 
-    // Submit to Supabase if configured
+    // Submit to Supabase
     if (SupabaseLeaderboard.isConfigured()) {
       SupabaseLeaderboard.submit('NOVA', d.score).catch(() => {});
     }

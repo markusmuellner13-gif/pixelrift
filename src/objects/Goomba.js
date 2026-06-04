@@ -1,4 +1,5 @@
 import { SFX } from '../systems/AudioSystem.js';
+import { FONT } from '../config.js';
 import { ENEMY_STOMP_SCORE, ENEMY_MULTI_BONUS } from '../config.js';
 
 const DETECT_RADIUS = 90;
@@ -74,7 +75,7 @@ export default class Goomba extends Phaser.Physics.Arcade.Sprite {
 
   _showExclamation() {
     this._exclamation = this.scene.add.text(this.x, this.y - 18, '!', {
-      fontSize: '10px', fontFamily: 'monospace', color: '#ff4444',
+      fontSize: '10px', fontFamily: FONT, color: '#ff4444',
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5).setDepth(12);
     this.scene.tweens.add({
@@ -131,7 +132,7 @@ export default class Goomba extends Phaser.Physics.Arcade.Sprite {
 
   _showComboText(n) {
     const txt = this.scene.add.text(this.x, this.y - 20, `COMBO ×${n}!`, {
-      fontSize: '7px', fontFamily: 'monospace', color: '#ff8800',
+      fontSize: '7px', fontFamily: FONT, color: '#ff8800',
       stroke: '#000', strokeThickness: 1,
     }).setOrigin(0.5).setDepth(15);
     this.scene.tweens.add({

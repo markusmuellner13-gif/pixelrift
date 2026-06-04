@@ -1,7 +1,7 @@
 import {
   SCENES, TILE, COLORS, PLAYER_LIVES_START,
   FLAGPOLE_BASE_SCORE, TIME_BONUS_FACTOR, PERFECT_CLEAR_BONUS,
-  MAGNET_RADIUS, DAILY_MODIFIERS,
+  MAGNET_RADIUS, DAILY_MODIFIERS, FONT,
 } from '../config.js';
 import { playMusic, stopMusic, SFX } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
@@ -170,15 +170,15 @@ export default class GameScene extends Phaser.Scene {
       .setScrollFactor(0).setDepth(500);
 
     const worldNames = ['', 'GRASSY PLAINS', 'SCORCHING DESERT', 'FROZEN PEAKS', 'STAR DIMENSION'];
-    const wLabel = this.add.text(width / 2, height / 2 - 26,
-      `WORLD ${this.currentWorld} — ${worldNames[this.currentWorld] || ''}`, {
-        fontSize: '9px', fontFamily: 'monospace', color: '#aaaaff',
+    const wLabel = this.add.text(width / 2, height / 2 - 32,
+      `WORLD ${this.currentWorld}  ${worldNames[this.currentWorld] || ''}`, {
+        fontSize: '11px', fontFamily: FONT, color: '#aaaaff',
         stroke: '#000', strokeThickness: 2,
       }).setScrollFactor(0).setDepth(501).setOrigin(0.5).setAlpha(0);
 
     const lLabel = this.add.text(width / 2, height / 2 - 10,
-      `Level ${this.currentLevel}: ${this.levelData.name}`, {
-        fontSize: '12px', fontFamily: 'monospace', color: '#ffd700',
+      `${this.levelData.name}`, {
+        fontSize: '14px', fontFamily: FONT, color: '#ffd700',
         stroke: '#000', strokeThickness: 3,
       }).setScrollFactor(0).setDepth(501).setOrigin(0.5).setAlpha(0);
 
@@ -187,8 +187,8 @@ export default class GameScene extends Phaser.Scene {
     mods.forEach((m, i) => {
       const modCfg = DAILY_MODIFIERS[m];
       if (!modCfg) return;
-      this.add.text(width / 2, height / 2 + 12 + i * 13, modCfg.label, {
-        fontSize: '7px', fontFamily: 'monospace', color: '#ff8800',
+      this.add.text(width / 2, height / 2 + 14 + i * 15, modCfg.label, {
+        fontSize: '9px', fontFamily: FONT, color: '#ff8800',
         stroke: '#000', strokeThickness: 2,
       }).setScrollFactor(0).setDepth(501).setOrigin(0.5);
     });
@@ -417,7 +417,7 @@ export default class GameScene extends Phaser.Scene {
       g.fillRoundedRect(z.x + 2, z.y + 2, z.w - 4, z.h - 4, 10);
       g.strokeRoundedRect(z.x + 2, z.y + 2, z.w - 4, z.h - 4, 10);
       this.add.text(tx, ty, label, {
-        fontSize: label.length > 1 ? '9px' : '16px', fontFamily: 'monospace', color: '#ffffff',
+        fontSize: label.length > 1 ? '10px' : '18px', fontFamily: FONT, color: '#ffffff',
       }).setScrollFactor(0).setDepth(91).setOrigin(0.5);
     };
     g.lineStyle(1.5, 0xffffff, 0.4);
@@ -427,14 +427,14 @@ export default class GameScene extends Phaser.Scene {
     drawBtn(zones.run,   0xffcc00, 'RUN',zones.run.x   + aw / 2,       height - bh / 2);
     drawBtn(zones.jump,  0x4488ff, '▲',  zones.jump.x  + jw / 2,       height - bh / 2);
 
-    const pauseBtn = this.add.text(width / 2, 8, '  ⏸  ', {
-      fontSize: '9px', fontFamily: 'monospace', color: '#ffffff',
-      backgroundColor: '#00000055', padding: { x: 4, y: 2 },
+    const pauseBtn = this.add.text(width / 2, 6, '  ⏸  ', {
+      fontSize: '11px', fontFamily: FONT, color: '#ffffff',
+      backgroundColor: '#00000066', padding: { x: 6, y: 3 },
     }).setScrollFactor(0).setDepth(91).setOrigin(0.5, 0).setInteractive();
     pauseBtn.on('pointerdown', () => this._togglePause());
 
     this._padIndicator = this.add.text(width - 4, 8, '', {
-      fontSize: '6px', fontFamily: 'monospace', color: '#aaffaa',
+      fontSize: '6px', fontFamily: FONT, color: '#aaffaa',
     }).setScrollFactor(0).setDepth(91).setOrigin(1, 0);
   }
 
@@ -720,8 +720,8 @@ export default class GameScene extends Phaser.Scene {
     if (this.score > (SaveSystem.get('highScore') || 0)) SaveSystem.set('highScore', this.score);
     this.uiScene?.updateScore(this.score);
     const txt = this.add.text(x, y - 8, `+${adj}`, {
-      fontSize: '7px', fontFamily: 'monospace', color: '#ffd700',
-      stroke: '#000', strokeThickness: 1,
+      fontSize: '9px', fontFamily: FONT, color: '#ffd700',
+      stroke: '#000', strokeThickness: 2,
     }).setDepth(20);
     this.tweens.add({ targets: txt, y: y - 28, alpha: 0, duration: 800, onComplete: () => txt.destroy() });
   }
@@ -777,9 +777,9 @@ export default class GameScene extends Phaser.Scene {
 
   _showNotice(msg) {
     const { width } = this.scale;
-    const txt = this.add.text(width / 2, 30, msg, {
-      fontSize: '9px', fontFamily: 'monospace', color: '#ffd700',
-      stroke: '#000', strokeThickness: 2,
+    const txt = this.add.text(width / 2, 38, msg, {
+      fontSize: '11px', fontFamily: FONT, color: '#ffd700',
+      stroke: '#000', strokeThickness: 3,
     }).setScrollFactor(0).setDepth(200).setOrigin(0.5);
     this.tweens.add({
       targets: txt, y: 20, alpha: 0, duration: 1800, ease: 'Quad.easeIn',

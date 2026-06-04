@@ -1,5 +1,5 @@
-import { SCENES, COLORS } from '../config.js';
-import { playMusic, SFX } from '../systems/AudioSystem.js';
+import { SCENES, FONT, COLORS } from '../config.js';
+import { playMusic, SFX, setMusicEnabled, setSfxEnabled } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
 
 export default class MainMenuScene extends Phaser.Scene {
@@ -7,184 +7,162 @@ export default class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-
-    // Animated starfield background
     this._buildBackground(width, height);
 
-    // Title
-    this.add.text(width / 2, height * 0.22, 'PIXELRIFT', {
-      fontSize: '32px', fontFamily: 'monospace', color: '#ffd700',
-      stroke: '#000000', strokeThickness: 4,
+    // Game title
+    this.add.text(width / 2, height * 0.20, 'PIXELRIFT', {
+      fontSize: '28px', fontFamily: FONT,
+      color: '#ffd700', stroke: '#000000', strokeThickness: 4,
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, height * 0.33, 'Leap. Explore. Conquer.', {
-      fontSize: '8px', fontFamily: 'monospace', color: '#aaaaff',
+    this.add.text(width / 2, height * 0.32, 'Leap. Explore. Conquer.', {
+      fontSize: '10px', fontFamily: FONT, color: '#aaaaff',
     }).setOrigin(0.5);
 
     // Menu options
     const options = [
-      { label: '▶  PLAY', scene: 'play' },
+      { label: '▶  PLAY',            scene: 'play' },
       { label: '⭐ DAILY CHALLENGE', scene: SCENES.DAILY },
-      { label: '🏆 LEADERBOARD', scene: SCENES.LEADERBOARD },
-      { label: '⚙  SETTINGS', scene: 'settings' },
+      { label: '🏆 LEADERBOARD',     scene: SCENES.LEADERBOARD },
+      { label: '⚙  SETTINGS',        scene: 'settings' },
     ];
 
     this._selectedIdx = 0;
     this._optionTexts = [];
+    this._options = options;
 
     options.forEach((opt, i) => {
-      const y = height * 0.50 + i * 22;
+      const y = height * 0.48 + i * 26;
       const txt = this.add.text(width / 2, y, opt.label, {
-        fontSize: '10px', fontFamily: 'monospace',
+        fontSize: '11px', fontFamily: FONT,
         color: i === 0 ? '#ffd700' : '#ffffff',
         stroke: '#000', strokeThickness: 2,
       }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
-      txt.on('pointerover', () => { this._select(i); });
-      txt.on('pointerdown', () => { this._confirm(options); });
+      txt.on('pointerover', () => this._select(i));
+      txt.on('pointerdown', () => this._confirm());
       this._optionTexts.push({ txt, opt });
     });
 
-    // High score display
+    // High score
     const hs = SaveSystem.get('highScore') || 0;
-    this.add.text(width / 2, height * 0.78, `BEST: ${hs.toLocaleString()}`, {
-      fontSize: '7px', fontFamily: 'monospace', color: '#ffaaaa',
+    this.add.text(width / 2, height * 0.88, `BEST SCORE: ${hs.toLocaleString()}`, {
+      fontSize: '9px', fontFamily: FONT, color: '#ff8888',
     }).setOrigin(0.5);
 
-    // Keyboard navigation
-    this._keys = this.input.keyboard.addKeys({
-      up: Phaser.Input.Keyboard.KeyCodes.UP,
-      down: Phaser.Input.Keyboard.KeyCodes.DOWN,
-      enter: Phaser.Input.Keyboard.KeyCodes.ENTER,
-      space: Phaser.Input.Keyboard.KeyCodes.SPACE,
-      w: Phaser.Input.Keyboard.KeyCodes.W,
-      s: Phaser.Input.Keyboard.KeyCodes.S,
-    });
-
-    // Touch button
-    const playBtn = this.add.text(width / 2, height * 0.90, '[ TAP TO START ]', {
-      fontSize: '7px', fontFamily: 'monospace', color: '#55ffaa',
+    // Tap to start (mobile)
+    const tap = this.add.text(width / 2, height * 0.96, 'TAP TO START', {
+      fontSize: '9px', fontFamily: FONT, color: '#55ffaa',
     }).setOrigin(0.5).setInteractive();
-    playBtn.on('pointerdown', () => this._confirm(options));
-    this.tweens.add({ targets: playBtn, alpha: 0.2, duration: 600, yoyo: true, repeat: -1 });
+    tap.on('pointerdown', () => this._confirm());
+    this.tweens.add({ targets: tap, alpha: 0.15, duration: 700, yoyo: true, repeat: -1 });
 
     // Controls hint
-    this.add.text(width / 2, height - 10,
-      '⌨ ←→/WASD Move  ↑/W/Space Jump  Z/Shift Run  X Fire  |  🎮 Left Stick A B X Start', {
-      fontSize: '5px', fontFamily: 'monospace', color: '#666688',
-    }).setOrigin(0.5);
+    this.add.text(width / 2, height - 8,
+      'WASD/Arrows Move  Space Jump  Z Run  X Fire  🎮 Controller supported', {
+        fontSize: '7px', fontFamily: FONT, color: '#555577',
+      }).setOrigin(0.5, 1);
+
+    // Keyboard nav
+    this._keys = this.input.keyboard.addKeys({
+      up:    Phaser.Input.Keyboard.KeyCodes.UP,
+      down:  Phaser.Input.Keyboard.KeyCodes.DOWN,
+      w:     Phaser.Input.Keyboard.KeyCodes.W,
+      s:     Phaser.Input.Keyboard.KeyCodes.S,
+      enter: Phaser.Input.Keyboard.KeyCodes.ENTER,
+      space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+    });
 
     playMusic('menu');
-    this._selectAnimTimer = 0;
-    this._options = options;
   }
 
   _buildBackground(w, h) {
-    // Dark gradient
-    const bg = this.add.rectangle(w / 2, h / 2, w, h, 0x0d0d1a);
-    // Stars
+    this.add.rectangle(w / 2, h / 2, w, h, 0x0d0d1a);
     for (let i = 0; i < 80; i++) {
-      const x = Phaser.Math.Between(0, w);
-      const y = Phaser.Math.Between(0, h * 0.7);
-      const star = this.add.image(x, y, 'star_twinkle').setAlpha(Math.random() * 0.7 + 0.3).setScale(Math.random() + 0.5);
+      const s = this.add.image(
+        Phaser.Math.Between(0, w), Phaser.Math.Between(0, h * 0.7),
+        'star_twinkle'
+      ).setAlpha(Math.random() * 0.7 + 0.3).setScale(Math.random() + 0.5);
       this.tweens.add({
-        targets: star, alpha: 0.1,
+        targets: s, alpha: 0.1,
         duration: Phaser.Math.Between(500, 2000),
         yoyo: true, repeat: -1, delay: Phaser.Math.Between(0, 1000),
       });
     }
-    // Floating platforms
-    for (let i = 0; i < 5; i++) {
-      const px = Phaser.Math.Between(20, w - 60);
-      const py = Phaser.Math.Between(h * 0.45, h * 0.75);
-      this.add.image(px, py, 'moving_platform').setAlpha(0.4);
+    for (let i = 0; i < 4; i++) {
+      this.add.image(
+        Phaser.Math.Between(20, w - 60), Phaser.Math.Between(h * 0.5, h * 0.75),
+        'moving_platform'
+      ).setAlpha(0.3);
     }
-    // Animated Nova character
-    const nova = this.add.image(w / 2 - 20, h * 0.42, 'nova_big_idle').setScale(2);
-    this.tweens.add({ targets: nova, y: nova.y - 4, duration: 600, yoyo: true, repeat: -1 });
+    const nova = this.add.image(w / 2 - 20, h * 0.40, 'nova_big_idle').setScale(2.5);
+    this.tweens.add({ targets: nova, y: nova.y - 5, duration: 700, yoyo: true, repeat: -1 });
   }
 
   _select(idx) {
     this._selectedIdx = idx;
     this._optionTexts.forEach(({ txt }, i) => {
       txt.setColor(i === idx ? '#ffd700' : '#ffffff');
-      txt.setScale(i === idx ? 1.1 : 1);
+      txt.setScale(i === idx ? 1.08 : 1);
     });
     SFX.menu_move();
   }
 
-  _confirm(options) {
-    const opt = options[this._selectedIdx];
+  _confirm() {
+    const opt = this._options[this._selectedIdx];
     SFX.menu_select();
-    if (opt.scene === 'play') {
-      this.scene.start(SCENES.WORLDMAP);
-    } else if (opt.scene === SCENES.DAILY) {
-      this.scene.start(SCENES.DAILY);
-    } else if (opt.scene === 'settings') {
-      this._showSettings();
-    } else {
-      this.scene.start(opt.scene);
-    }
+    if (opt.scene === 'play')    { this.scene.start(SCENES.WORLDMAP); }
+    else if (opt.scene === SCENES.DAILY) { this.scene.start(SCENES.DAILY); }
+    else if (opt.scene === SCENES.LEADERBOARD) { this.scene.start(SCENES.LEADERBOARD); }
+    else if (opt.scene === 'settings') { this._showSettings(); }
   }
 
   _showSettings() {
     const { width, height } = this.scale;
-    // Simple overlay
-    const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.85).setInteractive();
-    const panel = this.add.rectangle(width / 2, height / 2, 200, 120, 0x1a1a2e).setStrokeStyle(2, 0xffd700);
+    const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.88).setInteractive();
+    this.add.rectangle(width / 2, height / 2, 240, 160, 0x1a1a2e).setStrokeStyle(2, 0xffd700);
 
-    this.add.text(width / 2, height / 2 - 45, 'SETTINGS', {
-      fontSize: '10px', fontFamily: 'monospace', color: '#ffd700',
+    this.add.text(width / 2, height / 2 - 60, 'SETTINGS', {
+      fontSize: '13px', fontFamily: FONT, color: '#ffd700',
     }).setOrigin(0.5);
 
-    const musicOn = SaveSystem.getSetting('music');
-    const sfxOn   = SaveSystem.getSetting('sfx');
+    const rows = [
+      { label: () => `MUSIC: ${SaveSystem.getSetting('music') ? 'ON' : 'OFF'}`,  key: 'music',  y: -28 },
+      { label: () => `SFX:   ${SaveSystem.getSetting('sfx')   ? 'ON' : 'OFF'}`,  key: 'sfx',    y:   2 },
+    ];
 
-    const mTxt = this.add.text(width / 2, height / 2 - 20,
-      `MUSIC: ${musicOn ? 'ON' : 'OFF'}`, {
-        fontSize: '8px', fontFamily: 'monospace', color: '#ffffff'
-      }).setOrigin(0.5).setInteractive();
-
-    const sTxt = this.add.text(width / 2, height / 2,
-      `SFX: ${sfxOn ? 'ON' : 'OFF'}`, {
-        fontSize: '8px', fontFamily: 'monospace', color: '#ffffff'
-      }).setOrigin(0.5).setInteractive();
-
-    mTxt.on('pointerdown', () => {
-      const v = !SaveSystem.getSetting('music');
-      SaveSystem.updateSetting('music', v);
-      mTxt.setText(`MUSIC: ${v ? 'ON' : 'OFF'}`);
-      SFX.menu_select();
-    });
-    sTxt.on('pointerdown', () => {
-      const v = !SaveSystem.getSetting('sfx');
-      SaveSystem.updateSetting('sfx', v);
-      sTxt.setText(`SFX: ${v ? 'ON' : 'OFF'}`);
-    });
-
-    const closeTxt = this.add.text(width / 2, height / 2 + 25, '[ CLOSE ]', {
-      fontSize: '8px', fontFamily: 'monospace', color: '#ff8888',
-    }).setOrigin(0.5).setInteractive();
-    closeTxt.on('pointerdown', () => {
-      overlay.destroy(); panel.destroy();
-      mTxt.destroy(); sTxt.destroy(); closeTxt.destroy();
-      this.children.getAll().forEach(c => {
-        if (c.getData && c.getData('settingsChild')) c.destroy();
+    const txts = rows.map(row => {
+      const t = this.add.text(width / 2, height / 2 + row.y, row.label(), {
+        fontSize: '10px', fontFamily: FONT, color: '#ffffff',
+      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      t.on('pointerdown', () => {
+        const v = !SaveSystem.getSetting(row.key);
+        SaveSystem.updateSetting(row.key, v);
+        if (row.key === 'music') setMusicEnabled(v);
+        if (row.key === 'sfx')   setSfxEnabled(v);
+        t.setText(row.label());
+        SFX.menu_select();
       });
+      return t;
     });
 
-    const resetTxt = this.add.text(width / 2, height / 2 + 40, '⚠ RESET SAVE', {
-      fontSize: '7px', fontFamily: 'monospace', color: '#ff4444',
-    }).setOrigin(0.5).setInteractive();
-    resetTxt.on('pointerdown', () => {
+    const reset = this.add.text(width / 2, height / 2 + 36, '⚠ RESET SAVE DATA', {
+      fontSize: '9px', fontFamily: FONT, color: '#ff4444',
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    reset.on('pointerdown', () => {
       if (confirm('Reset ALL save data? This cannot be undone!')) {
         SaveSystem.reset();
         this.scene.restart();
       }
     });
+
+    const close = this.add.text(width / 2, height / 2 + 60, '[ CLOSE ]', {
+      fontSize: '10px', fontFamily: FONT, color: '#ff8888',
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    close.on('pointerdown', () => { overlay.destroy(); [close, reset, ...txts].forEach(o => o.destroy()); this.children.each(c => { if (c.getData?.('settingsChild')) c.destroy(); }); });
   }
 
-  update(time, delta) {
+  update() {
     const k = this._keys;
     if (Phaser.Input.Keyboard.JustDown(k.down) || Phaser.Input.Keyboard.JustDown(k.s)) {
       this._select((this._selectedIdx + 1) % this._optionTexts.length);
@@ -193,7 +171,7 @@ export default class MainMenuScene extends Phaser.Scene {
       this._select((this._selectedIdx - 1 + this._optionTexts.length) % this._optionTexts.length);
     }
     if (Phaser.Input.Keyboard.JustDown(k.enter) || Phaser.Input.Keyboard.JustDown(k.space)) {
-      this._confirm(this._options);
+      this._confirm();
     }
   }
 }
