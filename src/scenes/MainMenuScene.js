@@ -24,7 +24,8 @@ export default class MainMenuScene extends Phaser.Scene {
     // Menu options
     const options = [
       { label: '▶  PLAY', scene: 'play' },
-      { label: '⭐ LEADERBOARD', scene: SCENES.LEADERBOARD },
+      { label: '⭐ DAILY CHALLENGE', scene: SCENES.DAILY },
+      { label: '🏆 LEADERBOARD', scene: SCENES.LEADERBOARD },
       { label: '⚙  SETTINGS', scene: 'settings' },
     ];
 
@@ -117,6 +118,8 @@ export default class MainMenuScene extends Phaser.Scene {
     SFX.menu_select();
     if (opt.scene === 'play') {
       this.scene.start(SCENES.WORLDMAP);
+    } else if (opt.scene === SCENES.DAILY) {
+      this.scene.start(SCENES.DAILY);
     } else if (opt.scene === 'settings') {
       this._showSettings();
     } else {

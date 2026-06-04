@@ -24,26 +24,13 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
     this.play('coin_spin');
 
     if (fromBlock) {
-      // Pop-up animation from question block
-      this.body.setAllowGravity(false);
       const startY = y;
       scene.tweens.add({
-        targets: this,
-        y: y - 24,
-        duration: 200,
-        ease: 'Quad.easeOut',
-        yoyo: false,
+        targets: this, y: y - 24, duration: 200, ease: 'Quad.easeOut',
         onComplete: () => {
-          scene.tweens.add({
-            targets: this,
-            y: startY,
-            duration: 200,
-            ease: 'Quad.easeIn',
-            onComplete: () => this.destroy()
-          });
+          scene.tweens.add({ targets: this, y: startY, duration: 200, ease: 'Quad.easeIn', onComplete: () => this.destroy() });
         }
       });
-      // Collect immediately after animation
       scene.time.delayedCall(50, () => {
         SFX.coin();
         scene.events.emit('collectCoin', 1);
@@ -58,11 +45,28 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
     SFX.coin();
     this.scene.events.emit('collectCoin', 1);
     this.scene.events.emit('scoreAdd', COIN_SCORE, this.x, this.y);
+    // Burst effect
+    this.scene.coinEmitter?.emitParticleAt(this.x, this.y, 4);
     this.scene.tweens.add({
-      targets: this,
-      y: this.y - 16, alpha: 0,
-      duration: 200,
-      onComplete: () => this.destroy()
+      targets: this, y: this.y - 20, alpha: 0, scaleX: 1.5, scaleY: 1.5,
+      duration: 220, onComplete: () => this.destroy()
     });
+  }
+
+  /** Called every frame from GameScene when player has magnet active */
+  attractToPlayer(player) {
+    if (this.collected) return;
+    const dx = player.x - this.x;
+    const dy = player.y - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 8) {
+      this.collect();
+      return;
+    }
+    const speed = 180;
+    this.x += (dx / dist) * speed * (1 / 60);
+    this.y += (dy / dist) * speed * (1 / 60);
+    // Update physics body position
+    this.body.reset(this.x, this.y);
   }
 }

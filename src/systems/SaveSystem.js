@@ -94,8 +94,22 @@ export const SaveSystem = {
   isLevelUnlocked(world, level) {
     if (!this._data) this.load();
     if (world === 1 && level === 1) return true;
+
+    // World 4 requires 3-stars on all W1-3 levels
+    if (world === 4) {
+      let allThree = true;
+      for (let w = 1; w <= 3; w++) {
+        for (let l = 1; l <= 5; l++) {
+          if ((this._data.levelProgress[`${w}-${l}`]?.stars || 0) < 3) { allThree = false; break; }
+        }
+        if (!allThree) break;
+      }
+      if (!allThree) return false;
+      if (level === 1) return true;
+      return this._data.levelProgress[`4-${level - 1}`]?.completed === true;
+    }
+
     if (level === 1) {
-      // Unlock world if previous world level 5 complete
       const prev = this._data.levelProgress[`${world - 1}-5`];
       return prev?.completed === true;
     }

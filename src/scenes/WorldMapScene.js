@@ -1,10 +1,19 @@
-import { SCENES, WORLDS, LEVELS_PER_WORLD } from '../config.js';
+import { SCENES, LEVELS_PER_WORLD } from '../config.js';
 import { playMusic, SFX } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
 import QuestSystem from '../systems/QuestSystem.js';
 
-const WORLD_COLORS = [0x5c94fc, 0xffcc44, 0x99ccff];
-const WORLD_NAMES  = ['GRASSY PLAINS', 'SCORCHING DESERT', 'FROZEN PEAKS'];
+const WORLD_COLORS = [0x5c94fc, 0xffcc44, 0x99ccff, 0x8800ff];
+const WORLD_NAMES  = ['GRASSY PLAINS', 'SCORCHING DESERT', 'FROZEN PEAKS', 'STAR DIMENSION'];
+
+function world4Unlocked() {
+  for (let w = 1; w <= 3; w++) {
+    for (let l = 1; l <= 5; l++) {
+      if ((SaveSystem.getLevel(w, l).stars || 0) < 3) return false;
+    }
+  }
+  return true;
+}
 
 export default class WorldMapScene extends Phaser.Scene {
   constructor() { super({ key: SCENES.WORLDMAP }); }
@@ -25,6 +34,7 @@ export default class WorldMapScene extends Phaser.Scene {
 
     this._worldPanels = [];
     this._levelDots = [];
+    this._w4unlocked = world4Unlocked();
     this._renderWorlds(width, height);
     this._renderLevelSelect(width, height);
 
@@ -50,11 +60,19 @@ export default class WorldMapScene extends Phaser.Scene {
       fontSize: '6px', fontFamily: 'monospace', color: '#aaffaa',
     }).setOrigin(1, 1);
 
+    // World 4 teaser if not yet unlocked
+    if (!this._w4unlocked) {
+      this.add.text(width / 2, height - 20, '★ 3-star all levels to unlock STAR DIMENSION!', {
+        fontSize: '5px', fontFamily: 'monospace', color: '#8844aa',
+      }).setOrigin(0.5);
+    }
+
     playMusic('menu');
     this._refreshHighlight();
   }
 
   _renderWorlds(width, height) {
+    const WORLDS = this._w4unlocked ? 4 : 3;
     for (let w = 0; w < WORLDS; w++) {
       const wx = 50 + w * 130;
       const wy = 50;

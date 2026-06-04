@@ -9,6 +9,7 @@ import PauseScene from './scenes/PauseScene.js';
 import LevelCompleteScene from './scenes/LevelCompleteScene.js';
 import GameOverScene from './scenes/GameOverScene.js';
 import LeaderboardScene from './scenes/LeaderboardScene.js';
+import DailyChallengeScene from './scenes/DailyChallengeScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -44,6 +45,7 @@ const config = {
     LevelCompleteScene,
     GameOverScene,
     LeaderboardScene,
+    DailyChallengeScene,
   ]
 };
 

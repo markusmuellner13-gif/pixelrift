@@ -690,6 +690,201 @@ export function generateAllTextures(scene) {
   g.generateTexture('app_icon', 32, 32);
   g.clear();
 
+  // ─── Lava tiles (3 animation frames) ─────────────────────────
+  const lavaColors = [COLORS.lava0, COLORS.lava1, COLORS.lava2];
+  lavaColors.forEach((col, fi) => {
+    g.fillStyle(col);
+    g.fillRect(0, 0, 16, 6);
+    g.fillStyle(fi === 0 ? COLORS.lava1 : COLORS.lava0);
+    g.fillRect(0, 6, 16, 10);
+    // Bubble details
+    g.fillStyle(fi === 2 ? COLORS.lava2 : COLORS.lava1);
+    g.fillRect(3, fi % 2 === 0 ? 1 : 2, 3, 2);
+    g.fillRect(10, fi % 2 === 0 ? 2 : 1, 3, 2);
+    g.generateTexture(`tile_lava_${fi}`, 16, 16);
+    g.clear();
+  });
+
+  // ─── Water tiles (2 animation frames) ────────────────────────
+  [COLORS.water0, COLORS.water1].forEach((col, fi) => {
+    g.fillStyle(col);
+    g.fillRect(0, 0, 16, 16);
+    g.fillStyle(fi === 0 ? COLORS.water1 : COLORS.water0);
+    g.fillRect(fi === 0 ? 2 : 5, 3, 3, 2);
+    g.fillRect(fi === 0 ? 10 : 7, 5, 3, 2);
+    g.generateTexture(`tile_water_${fi}`, 16, 16);
+    g.clear();
+  });
+
+  // ─── Void / Star-Dimension tiles (World 4) ───────────────────
+  g.fillStyle(COLORS.void0);
+  g.fillRect(0, 0, 16, 4);
+  g.fillStyle(COLORS.void1);
+  g.fillRect(0, 4, 16, 12);
+  g.fillStyle(0x8844ff);
+  g.fillRect(3, 1, 2, 2);
+  g.fillRect(11, 2, 2, 2);
+  g.generateTexture('tile_void_top', 16, 16);
+  g.clear();
+
+  g.fillStyle(COLORS.void1);
+  g.fillRect(0, 0, 16, 16);
+  g.fillStyle(0x6622cc);
+  g.fillRect(2, 4, 2, 2);
+  g.fillRect(9, 11, 2, 2);
+  g.generateTexture('tile_void', 16, 16);
+  g.clear();
+
+  // ─── Dash trail particle ──────────────────────────────────────
+  g.fillStyle(0x88ddff, 0.8);
+  g.fillRect(0, 0, 6, 4);
+  g.generateTexture('particle_dash', 6, 4);
+  g.clear();
+
+  // ─── Coin magnet power-up ────────────────────────────────────
+  g.fillStyle(COLORS.magnet);
+  g.fillRect(2, 0, 8, 10);
+  g.fillRect(0, 0, 5, 5);
+  g.fillRect(7, 0, 5, 5);
+  g.fillStyle(0xcc88ff);
+  g.fillRect(3, 1, 6, 4);
+  g.generateTexture('magnet', 12, 12);
+  g.clear();
+
+  // ─── Magnet particle (attracted coin) ────────────────────────
+  g.fillStyle(COLORS.magnet, 0.6);
+  g.fillRect(0, 0, 3, 3);
+  g.generateTexture('particle_magnet', 3, 3);
+  g.clear();
+
+  // ─── Boss textures ────────────────────────────────────────────
+
+  // Goomboss (World 1) — giant goomba, 24×24
+  g.fillStyle(COLORS.goombaDark);
+  g.fillRect(0, 0, 24, 20);
+  g.fillStyle(COLORS.goomba);
+  g.fillRect(2, 2, 20, 18);
+  // Eyes
+  g.fillStyle(0x222222);
+  g.fillRect(4, 5, 4, 4);
+  g.fillRect(16, 5, 4, 4);
+  g.fillStyle(0xffffff);
+  g.fillRect(5, 6, 2, 2);
+  g.fillRect(17, 6, 2, 2);
+  // Eyebrows (angry)
+  g.fillStyle(COLORS.goombaDark);
+  g.fillRect(3, 4, 6, 2);
+  g.fillRect(15, 4, 6, 2);
+  // Feet
+  g.fillStyle(COLORS.goombaDark);
+  g.fillRect(0, 20, 10, 4);
+  g.fillRect(14, 20, 10, 4);
+  g.generateTexture('boss_goomboss', 24, 24);
+  g.clear();
+
+  // Sphinx (World 2) — flying boss, 28×20
+  g.fillStyle(0xcc9933);
+  g.fillRect(2, 6, 24, 14);
+  g.fillStyle(0xddaa44);
+  g.fillRect(4, 8, 20, 10);
+  g.fillStyle(0x8b4513);
+  g.fillRect(10, 0, 8, 8);
+  // Wings
+  g.fillStyle(0xeecc66);
+  g.fillRect(0, 2, 6, 8);
+  g.fillRect(22, 2, 6, 8);
+  // Eyes
+  g.fillStyle(0xff4400);
+  g.fillRect(8, 10, 4, 3);
+  g.fillRect(16, 10, 4, 3);
+  g.generateTexture('boss_sphinx', 28, 20);
+  g.clear();
+
+  // Frost Giant (World 3) — large icy boss, 24×28
+  g.fillStyle(0x4488cc);
+  g.fillRect(2, 0, 20, 28);
+  g.fillStyle(0x88bbff);
+  g.fillRect(4, 2, 16, 22);
+  g.fillStyle(0xaaddff);
+  g.fillRect(6, 4, 12, 16);
+  // Eyes
+  g.fillStyle(0x00ffff);
+  g.fillRect(6, 8, 4, 4);
+  g.fillRect(14, 8, 4, 4);
+  // Ice crown
+  g.fillStyle(0xddeeff);
+  g.fillRect(4, 0, 4, 4);
+  g.fillRect(10, 0, 4, 6);
+  g.fillRect(16, 0, 4, 4);
+  // Arms/fists
+  g.fillStyle(0x4488cc);
+  g.fillRect(0, 10, 4, 8);
+  g.fillRect(20, 10, 4, 8);
+  g.generateTexture('boss_frostgiant', 24, 28);
+  g.clear();
+
+  // Void Lord (World 4) — cosmic final boss, 32×32
+  g.fillStyle(0x110022);
+  g.fillRect(4, 4, 24, 28);
+  g.fillStyle(0x440088);
+  g.fillRect(6, 6, 20, 24);
+  g.fillStyle(0x8800ff);
+  g.fillRect(8, 8, 16, 18);
+  // Glowing eyes
+  g.fillStyle(0xff44ff);
+  g.fillRect(9, 12, 5, 5);
+  g.fillRect(18, 12, 5, 5);
+  g.fillStyle(0xffffff);
+  g.fillRect(10, 13, 3, 3);
+  g.fillRect(19, 13, 3, 3);
+  // Crown/horns
+  g.fillStyle(0xaa00ff);
+  g.fillRect(6, 0, 4, 8);
+  g.fillRect(14, 0, 4, 10);
+  g.fillRect(22, 0, 4, 8);
+  // Cloak tentacles
+  g.fillStyle(0x220044);
+  g.fillRect(0, 16, 6, 16);
+  g.fillRect(26, 16, 6, 16);
+  g.fillRect(4, 28, 24, 4);
+  g.generateTexture('boss_voidlord', 32, 32);
+  g.clear();
+
+  // Boss projectile
+  g.fillStyle(0xff4400);
+  g.fillCircle(5, 5, 4);
+  g.fillStyle(0xffaa00);
+  g.fillCircle(5, 5, 2);
+  g.generateTexture('boss_proj', 10, 10);
+  g.clear();
+
+  // Void projectile
+  g.fillStyle(0x8800ff);
+  g.fillCircle(5, 5, 4);
+  g.fillStyle(0xcc44ff);
+  g.fillCircle(5, 5, 2);
+  g.generateTexture('boss_proj_void', 10, 10);
+  g.clear();
+
+  // HP bar segments
+  g.fillStyle(0xff2222);
+  g.fillRect(0, 0, 28, 8);
+  g.fillStyle(0xff6666);
+  g.fillRect(2, 2, 24, 2);
+  g.generateTexture('boss_hp_full', 28, 8);
+  g.clear();
+
+  g.fillStyle(0x552222);
+  g.fillRect(0, 0, 28, 8);
+  g.generateTexture('boss_hp_empty', 28, 8);
+  g.clear();
+
+  // Boss flash white (for hit feedback)
+  g.fillStyle(0xffffff);
+  g.fillRect(0, 0, 32, 32);
+  g.generateTexture('boss_flash', 32, 32);
+  g.clear();
+
   g.destroy();
 }
 

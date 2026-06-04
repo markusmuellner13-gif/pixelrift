@@ -82,6 +82,12 @@ export default class InputManager {
 
   // ─── Unified accessors ────────────────────────────────────────
 
+  get down() {
+    const kb = this.scene.cursors?.down?.isDown || this._keys.s.isDown;
+    const pad = this._padDpad('down') || (this._getPad()?.axes?.[1]?.getValue() > 0.5);
+    return kb || pad;
+  }
+
   get left() {
     const kb = this.scene.cursors?.left?.isDown || this._keys.a.isDown;
     return kb || this._padAxis() < -0.3 || this._padDpad('left') || this._touch.left;
@@ -152,6 +158,7 @@ export default class InputManager {
     if (!pad) return false;
     if (dir === 'left')  return pad.left;
     if (dir === 'right') return pad.right;
+    if (dir === 'down')  return pad.down;
     return false;
   }
 

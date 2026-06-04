@@ -297,6 +297,7 @@ export const LEVELS = {
 
   '1-5': {
     world: 1, level: 5, name: 'Storm Keep', theme: 'castle',
+    boss: { x: 3020, y: 190, type: 'goomboss' },
     width: 3200, height: 270, timeLimit: 350, music: 'boss',
     bgColor: 0x222233,
     start: { x: 48, y: 200 },
@@ -468,7 +469,7 @@ export const LEVELS = {
 
   '2-4': { world:2, level:4, name:'Mirage Falls', theme:'desert', width:3200, height:270, timeLimit:300, music:'world2', bgColor:0xeebb44, start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600}, grounds:[{x:0,w:8},{x:192,w:8}], platforms:[{x:5,y:12,w:4},{x:12,y:10,w:3},{x:18,y:8,w:4},{x:25,y:6,w:3},{x:31,y:8,w:4},{x:38,y:10,w:3},{x:44,y:12,w:4},{x:51,y:10,w:3},{x:57,y:8,w:4},{x:64,y:6,w:3},{x:70,y:4,w:4},{x:77,y:6,w:3},{x:83,y:8,w:4},{x:90,y:10,w:3},{x:96,y:12,w:4},{x:103,y:10,w:3},{x:109,y:8,w:4},{x:116,y:6,w:3},{x:122,y:4,w:4},{x:129,y:6,w:3},{x:135,y:8,w:4},{x:142,y:10,w:3},{x:148,y:12,w:4},{x:155,y:10,w:3},{x:161,y:8,w:4},{x:168,y:6,w:3},{x:174,y:4,w:4},{x:181,y:6,w:3},{x:187,y:8,w:4},{x:193,y:10,w:5}], questions:[{x:6,y:10,item:'coin'},{x:13,y:8,item:'mushroom'},{x:19,y:6,item:'star'},{x:26,y:4,item:'coin'},{x:32,y:6,item:'coin'},{x:39,y:8,item:'mushroom'},{x:45,y:10,item:'coin'},{x:52,y:8,item:'coin'},{x:58,y:6,item:'star'},{x:65,y:4,item:'mushroom'},{x:71,y:2,item:'fireflower'},{x:78,y:4,item:'coin'},{x:84,y:6,item:'coin'},{x:91,y:8,item:'coin'},{x:97,y:10,item:'mushroom'},{x:104,y:8,item:'star'},{x:110,y:6,item:'coin'},{x:117,y:4,item:'coin'},{x:123,y:2,item:'star'},{x:130,y:4,item:'mushroom'},{x:136,y:6,item:'coin'},{x:143,y:8,item:'coin'},{x:149,y:10,item:'fireflower'},{x:156,y:8,item:'coin'},{x:162,y:6,item:'star'},{x:169,y:4,item:'mushroom'},{x:175,y:2,item:'coin'},{x:182,y:4,item:'coin'},{x:188,y:6,item:'mushroom'},{x:194,y:8,item:'star'}], bricks:[{x:7,y:10},{x:8,y:10},{x:14,y:8},{x:20,y:6},{x:27,y:4},{x:33,y:6},{x:40,y:8},{x:46,y:10},{x:53,y:8},{x:59,y:6},{x:66,y:4},{x:72,y:2},{x:79,y:4},{x:85,y:6},{x:92,y:8},{x:98,y:10},{x:105,y:8},{x:111,y:6},{x:118,y:4},{x:124,y:2},{x:131,y:4},{x:137,y:6},{x:144,y:8},{x:150,y:10},{x:157,y:8},{x:163,y:6},{x:170,y:4},{x:176,y:2},{x:183,y:4},{x:189,y:6},{x:195,y:8}], enemies:[{type:'spiny',x:12*16,y:200},{type:'spiny',x:19*16,y:200},{type:'koopa',x:32*16,y:200},{type:'spiny',x:45*16,y:200},{type:'spiny',x:52*16,y:200},{type:'koopa',x:65*16,y:200},{type:'spiny',x:78*16,y:200},{type:'goomba',x:85*16,y:200},{type:'spiny',x:97*16,y:200},{type:'koopa',x:110*16,y:200},{type:'spiny',x:123*16,y:200},{type:'goomba',x:131*16,y:200},{type:'spiny',x:143*16,y:200},{type:'koopa',x:156*16,y:200},{type:'spiny',x:169*16,y:200},{type:'goomba',x:176*16,y:200},{type:'spiny',x:188*16,y:200},{type:'koopa',x:195*16,y:200}], coins:[[3,14],[4,14],[5,14],[46,14],[47,14],[97,14],[98,14],[149,14],[150,14],[194,14],[195,14]], pipes:[], movingPlatforms:[{x:44*16,y:12*16,w:48,axis:'x',range:80,speed:70},{x:96*16,y:10*16,w:48,axis:'y',range:64,speed:65},{x:148*16,y:10*16,w:48,axis:'x',range:96,speed:80}], spikes:[{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:11*16,y:14*16+4},{x:38*16,y:14*16+4},{x:39*16,y:14*16+4},{x:83*16,y:14*16+4},{x:84*16,y:14*16+4},{x:135*16,y:14*16+4},{x:136*16,y:14*16+4},{x:186*16,y:14*16+4},{x:187*16,y:14*16+4}] },
 
-  '2-5': { world:2, level:5, name:'Pharaoh\'s Tomb', theme:'castle', width:3200, height:270, timeLimit:300, music:'boss', bgColor:0x441100, start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600}, grounds:[{x:0,w:200}], platforms:[{x:6,y:10,w:3},{x:12,y:8,w:4},{x:19,y:6,w:3},{x:25,y:4,w:4},{x:32,y:6,w:3},{x:38,y:8,w:4},{x:45,y:6,w:3},{x:51,y:4,w:4},{x:58,y:6,w:3},{x:64,y:8,w:4},{x:71,y:10,w:3},{x:77,y:8,w:4},{x:84,y:6,w:3},{x:90,y:4,w:4},{x:97,y:6,w:3},{x:103,y:8,w:4},{x:110,y:10,w:3},{x:116,y:8,w:4},{x:123,y:6,w:3},{x:129,y:4,w:4},{x:136,y:6,w:3},{x:142,y:8,w:4},{x:149,y:6,w:3},{x:155,y:4,w:4},{x:162,y:6,w:3},{x:168,y:8,w:4},{x:175,y:10,w:3},{x:181,y:8,w:4},{x:188,y:6,w:3},{x:194,y:4,w:5}], questions:[{x:7,y:8,item:'star'},{x:13,y:6,item:'mushroom'},{x:20,y:4,item:'coin'},{x:26,y:2,item:'star'},{x:33,y:4,item:'fireflower'},{x:39,y:6,item:'coin'},{x:46,y:4,item:'star'},{x:52,y:2,item:'mushroom'},{x:59,y:4,item:'coin'},{x:65,y:6,item:'coin'},{x:72,y:8,item:'mushroom'},{x:78,y:6,item:'star'},{x:85,y:4,item:'coin'},{x:91,y:2,item:'fireflower'},{x:98,y:4,item:'star'},{x:104,y:6,item:'mushroom'},{x:111,y:8,item:'coin'},{x:117,y:6,item:'star'},{x:124,y:4,item:'coin'},{x:130,y:2,item:'fireflower'},{x:137,y:4,item:'star'},{x:143,y:6,item:'mushroom'},{x:150,y:4,item:'coin'},{x:156,y:2,item:'star'},{x:163,y:4,item:'coin'},{x:169,y:6,item:'mushroom'},{x:176,y:8,item:'star'},{x:182,y:6,item:'coin'},{x:189,y:4,item:'fireflower'},{x:195,y:2,item:'star'}], bricks:[{x:8,y:8},{x:9,y:8},{x:14,y:6},{x:21,y:4},{x:27,y:2},{x:34,y:4},{x:40,y:6},{x:47,y:4},{x:53,y:2},{x:60,y:4},{x:66,y:6},{x:73,y:8},{x:79,y:6},{x:86,y:4},{x:92,y:2},{x:99,y:4},{x:105,y:6},{x:112,y:8},{x:118,y:6},{x:125,y:4},{x:131,y:2},{x:138,y:4},{x:144,y:6},{x:151,y:4},{x:157,y:2},{x:164,y:4},{x:170,y:6},{x:177,y:8},{x:183,y:6},{x:190,y:4},{x:196,y:2}], enemies:[{type:'spiny',x:12*16,y:200},{type:'spiny',x:19*16,y:200},{type:'koopa',x:26*16,y:200},{type:'spiny',x:39*16,y:200},{type:'spiny',x:46*16,y:200},{type:'koopa',x:53*16,y:200},{type:'spiny',x:65*16,y:200},{type:'spiny',x:72*16,y:200},{type:'koopa',x:79*16,y:200},{type:'spiny',x:91*16,y:200},{type:'spiny',x:98*16,y:200},{type:'koopa',x:105*16,y:200},{type:'spiny',x:117*16,y:200},{type:'spiny',x:124*16,y:200},{type:'koopa',x:131*16,y:200},{type:'spiny',x:143*16,y:200},{type:'spiny',x:150*16,y:200},{type:'koopa',x:157*16,y:200},{type:'spiny',x:169*16,y:200},{type:'spiny',x:176*16,y:200},{type:'koopa',x:183*16,y:200},{type:'spiny',x:190*16,y:200},{type:'spiny',x:196*16,y:200}], coins:[[3,14],[4,14],[5,14],[33,14],[34,14],[72,14],[73,14],[112,14],[113,14],[150,14],[151,14],[188,14],[189,14],[195,14],[196,14]], pipes:[], movingPlatforms:[{x:32*16,y:8*16,w:48,axis:'x',range:96,speed:80},{x:84*16,y:6*16,w:48,axis:'y',range:80,speed:75},{x:136*16,y:8*16,w:48,axis:'x',range:112,speed:90},{x:188*16,y:6*16,w:48,axis:'y',range:64,speed:85}], spikes:[{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:11*16,y:14*16+4},{x:32*16,y:14*16+4},{x:33*16,y:14*16+4},{x:34*16,y:14*16+4},{x:82*16,y:14*16+4},{x:83*16,y:14*16+4},{x:132*16,y:14*16+4},{x:133*16,y:14*16+4},{x:182*16,y:14*16+4},{x:183*16,y:14*16+4}] },
+  '2-5': { world:2, level:5, name:"Pharaoh's Tomb", boss:{x:3020,y:190,type:'sphinx'}, theme:'castle', width:3200, height:270, timeLimit:300, music:'boss', bgColor:0x441100, start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600}, grounds:[{x:0,w:200}], platforms:[{x:6,y:10,w:3},{x:12,y:8,w:4},{x:19,y:6,w:3},{x:25,y:4,w:4},{x:32,y:6,w:3},{x:38,y:8,w:4},{x:45,y:6,w:3},{x:51,y:4,w:4},{x:58,y:6,w:3},{x:64,y:8,w:4},{x:71,y:10,w:3},{x:77,y:8,w:4},{x:84,y:6,w:3},{x:90,y:4,w:4},{x:97,y:6,w:3},{x:103,y:8,w:4},{x:110,y:10,w:3},{x:116,y:8,w:4},{x:123,y:6,w:3},{x:129,y:4,w:4},{x:136,y:6,w:3},{x:142,y:8,w:4},{x:149,y:6,w:3},{x:155,y:4,w:4},{x:162,y:6,w:3},{x:168,y:8,w:4},{x:175,y:10,w:3},{x:181,y:8,w:4},{x:188,y:6,w:3},{x:194,y:4,w:5}], questions:[{x:7,y:8,item:'star'},{x:13,y:6,item:'mushroom'},{x:20,y:4,item:'coin'},{x:26,y:2,item:'star'},{x:33,y:4,item:'fireflower'},{x:39,y:6,item:'coin'},{x:46,y:4,item:'star'},{x:52,y:2,item:'mushroom'},{x:59,y:4,item:'coin'},{x:65,y:6,item:'coin'},{x:72,y:8,item:'mushroom'},{x:78,y:6,item:'star'},{x:85,y:4,item:'coin'},{x:91,y:2,item:'fireflower'},{x:98,y:4,item:'star'},{x:104,y:6,item:'mushroom'},{x:111,y:8,item:'coin'},{x:117,y:6,item:'star'},{x:124,y:4,item:'coin'},{x:130,y:2,item:'fireflower'},{x:137,y:4,item:'star'},{x:143,y:6,item:'mushroom'},{x:150,y:4,item:'coin'},{x:156,y:2,item:'star'},{x:163,y:4,item:'coin'},{x:169,y:6,item:'mushroom'},{x:176,y:8,item:'star'},{x:182,y:6,item:'coin'},{x:189,y:4,item:'fireflower'},{x:195,y:2,item:'star'}], bricks:[{x:8,y:8},{x:9,y:8},{x:14,y:6},{x:21,y:4},{x:27,y:2},{x:34,y:4},{x:40,y:6},{x:47,y:4},{x:53,y:2},{x:60,y:4},{x:66,y:6},{x:73,y:8},{x:79,y:6},{x:86,y:4},{x:92,y:2},{x:99,y:4},{x:105,y:6},{x:112,y:8},{x:118,y:6},{x:125,y:4},{x:131,y:2},{x:138,y:4},{x:144,y:6},{x:151,y:4},{x:157,y:2},{x:164,y:4},{x:170,y:6},{x:177,y:8},{x:183,y:6},{x:190,y:4},{x:196,y:2}], enemies:[{type:'spiny',x:12*16,y:200},{type:'spiny',x:19*16,y:200},{type:'koopa',x:26*16,y:200},{type:'spiny',x:39*16,y:200},{type:'spiny',x:46*16,y:200},{type:'koopa',x:53*16,y:200},{type:'spiny',x:65*16,y:200},{type:'spiny',x:72*16,y:200},{type:'koopa',x:79*16,y:200},{type:'spiny',x:91*16,y:200},{type:'spiny',x:98*16,y:200},{type:'koopa',x:105*16,y:200},{type:'spiny',x:117*16,y:200},{type:'spiny',x:124*16,y:200},{type:'koopa',x:131*16,y:200},{type:'spiny',x:143*16,y:200},{type:'spiny',x:150*16,y:200},{type:'koopa',x:157*16,y:200},{type:'spiny',x:169*16,y:200},{type:'spiny',x:176*16,y:200},{type:'koopa',x:183*16,y:200},{type:'spiny',x:190*16,y:200},{type:'spiny',x:196*16,y:200}], coins:[[3,14],[4,14],[5,14],[33,14],[34,14],[72,14],[73,14],[112,14],[113,14],[150,14],[151,14],[188,14],[189,14],[195,14],[196,14]], pipes:[], movingPlatforms:[{x:32*16,y:8*16,w:48,axis:'x',range:96,speed:80},{x:84*16,y:6*16,w:48,axis:'y',range:80,speed:75},{x:136*16,y:8*16,w:48,axis:'x',range:112,speed:90},{x:188*16,y:6*16,w:48,axis:'y',range:64,speed:85}], spikes:[{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:11*16,y:14*16+4},{x:32*16,y:14*16+4},{x:33*16,y:14*16+4},{x:34*16,y:14*16+4},{x:82*16,y:14*16+4},{x:83*16,y:14*16+4},{x:132*16,y:14*16+4},{x:133*16,y:14*16+4},{x:182*16,y:14*16+4},{x:183*16,y:14*16+4}] },
 
   // World 3 — Ice / Snow
   '3-1': { world:3, level:1, name:'Frostbite Fields', theme:'snow', width:3520, height:270, timeLimit:360, music:'world3', bgColor:0x99ccff, start:{x:48,y:200}, flagpole:{x:3440}, checkpoint:{x:1760}, grounds:[{x:0,w:22},{x:25,w:15},{x:43,w:12},{x:58,w:14},{x:75,w:12},{x:90,w:16},{x:109,w:12},{x:124,w:14},{x:141,w:16},{x:160,w:12},{x:175,w:14},{x:192,w:28}], platforms:[{x:6,y:11,w:4},{x:14,y:9,w:3},{x:22,y:11,w:4},{x:28,y:9,w:3},{x:36,y:11,w:4},{x:44,y:9,w:3},{x:51,y:11,w:4},{x:59,y:9,w:3},{x:66,y:11,w:4},{x:76,y:9,w:3},{x:82,y:11,w:4},{x:91,y:9,w:3},{x:98,y:11,w:4},{x:110,y:9,w:3},{x:116,y:11,w:4},{x:125,y:9,w:3},{x:132,y:11,w:4},{x:142,y:9,w:3},{x:149,y:11,w:4},{x:161,y:9,w:3},{x:168,y:11,w:4},{x:176,y:9,w:3},{x:183,y:11,w:4},{x:193,y:9,w:3},{x:200,y:11,w:4},{x:208,y:9,w:3}], questions:[{x:7,y:9,item:'mushroom'},{x:15,y:7,item:'coin'},{x:29,y:7,item:'star'},{x:37,y:9,item:'coin'},{x:45,y:7,item:'mushroom'},{x:52,y:9,item:'coin'},{x:60,y:7,item:'coin'},{x:67,y:9,item:'coin'},{x:77,y:7,item:'star'},{x:83,y:9,item:'mushroom'},{x:92,y:7,item:'coin'},{x:99,y:9,item:'coin'},{x:111,y:7,item:'coin'},{x:117,y:9,item:'mushroom'},{x:126,y:7,item:'star'},{x:133,y:9,item:'coin'},{x:143,y:7,item:'coin'},{x:150,y:9,item:'fireflower'},{x:162,y:7,item:'coin'},{x:169,y:9,item:'star'},{x:177,y:7,item:'mushroom'},{x:184,y:9,item:'coin'},{x:194,y:7,item:'coin'},{x:201,y:9,item:'star'},{x:209,y:7,item:'fireflower'}], bricks:[{x:8,y:9},{x:9,y:9},{x:16,y:7},{x:30,y:7},{x:38,y:9},{x:46,y:7},{x:53,y:9},{x:61,y:7},{x:68,y:9},{x:78,y:7},{x:84,y:9},{x:93,y:7},{x:100,y:9},{x:112,y:7},{x:118,y:9},{x:127,y:7},{x:134,y:9},{x:144,y:7},{x:151,y:9},{x:163,y:7},{x:170,y:9},{x:178,y:7},{x:185,y:9},{x:195,y:7},{x:202,y:9},{x:210,y:7}], enemies:[{type:'goomba',x:23*16,y:200},{type:'goomba',x:25*16,y:200},{type:'koopa',x:36*16,y:200},{type:'spiny',x:51*16,y:200},{type:'goomba',x:67*16,y:200},{type:'koopa',x:76*16,y:200},{type:'spiny',x:91*16,y:200},{type:'spiny',x:93*16,y:200},{type:'goomba',x:109*16,y:200},{type:'koopa',x:124*16,y:200},{type:'spiny',x:141*16,y:200},{type:'goomba',x:142*16,y:200},{type:'koopa',x:160*16,y:200},{type:'spiny',x:175*16,y:200},{type:'spiny',x:177*16,y:200},{type:'goomba',x:193*16,y:200},{type:'koopa',x:200*16,y:200},{type:'spiny',x:208*16,y:200}], coins:[[4,14],[5,14],[6,14],[26,14],[27,14],[44,14],[75,14],[76,14],[109,14],[110,14],[141,14],[160,14],[161,14],[192,14],[193,14],[207,14],[208,14]], pipes:[{x:20,h:2},{x:40,h:3},{x:72,h:2},{x:106,h:3},{x:172,h:4}], movingPlatforms:[{x:69*16,y:9*16,w:48,axis:'x',range:48,speed:50},{x:147*16,y:9*16,w:48,axis:'y',range:40,speed:45}], spikes:[{x:23*16,y:14*16+4},{x:24*16,y:14*16+4},{x:41*16,y:14*16+4},{x:42*16,y:14*16+4},{x:73*16,y:14*16+4},{x:74*16,y:14*16+4},{x:107*16,y:14*16+4},{x:108*16,y:14*16+4},{x:173*16,y:14*16+4},{x:174*16,y:14*16+4}] },
@@ -479,7 +480,191 @@ export const LEVELS = {
 
   '3-4': { world:3, level:4, name:'Glacier Gauntlet', theme:'snow', width:3520, height:270, timeLimit:280, music:'world3', bgColor:0x6688aa, start:{x:48,y:200}, flagpole:{x:3440}, checkpoint:{x:1760}, grounds:[{x:0,w:8},{x:212,w:8}], platforms:[{x:5,y:13,w:4},{x:12,y:11,w:3},{x:18,y:9,w:4},{x:25,y:7,w:3},{x:31,y:5,w:4},{x:38,y:7,w:3},{x:44,y:9,w:4},{x:51,y:11,w:3},{x:57,y:13,w:4},{x:64,y:11,w:3},{x:70,y:9,w:4},{x:77,y:7,w:3},{x:83,y:5,w:4},{x:90,y:7,w:3},{x:96,y:9,w:4},{x:103,y:11,w:3},{x:109,y:13,w:4},{x:116,y:11,w:3},{x:122,y:9,w:4},{x:129,y:7,w:3},{x:135,y:5,w:4},{x:142,y:7,w:3},{x:148,y:9,w:4},{x:155,y:11,w:3},{x:161,y:13,w:4},{x:168,y:11,w:3},{x:174,y:9,w:4},{x:181,y:7,w:3},{x:187,y:5,w:4},{x:194,y:7,w:3},{x:200,y:9,w:4},{x:207,y:11,w:5}], questions:[{x:6,y:11,item:'coin'},{x:13,y:9,item:'mushroom'},{x:19,y:7,item:'star'},{x:26,y:5,item:'coin'},{x:32,y:3,item:'fireflower'},{x:39,y:5,item:'coin'},{x:45,y:7,item:'coin'},{x:52,y:9,item:'mushroom'},{x:58,y:11,item:'coin'},{x:65,y:9,item:'star'},{x:71,y:7,item:'coin'},{x:78,y:5,item:'mushroom'},{x:84,y:3,item:'star'},{x:91,y:5,item:'coin'},{x:97,y:7,item:'coin'},{x:104,y:9,item:'fireflower'},{x:110,y:11,item:'coin'},{x:117,y:9,item:'mushroom'},{x:123,y:7,item:'star'},{x:130,y:5,item:'coin'},{x:136,y:3,item:'coin'},{x:143,y:5,item:'star'},{x:149,y:7,item:'mushroom'},{x:156,y:9,item:'coin'},{x:162,y:11,item:'coin'},{x:169,y:9,item:'fireflower'},{x:175,y:7,item:'star'},{x:182,y:5,item:'coin'},{x:188,y:3,item:'mushroom'},{x:195,y:5,item:'coin'},{x:201,y:7,item:'star'},{x:208,y:9,item:'fireflower'}], bricks:[{x:7,y:11},{x:8,y:11},{x:14,y:9},{x:20,y:7},{x:27,y:5},{x:33,y:3},{x:34,y:3},{x:40,y:5},{x:46,y:7},{x:53,y:9},{x:59,y:11},{x:66,y:9},{x:72,y:7},{x:79,y:5},{x:85,y:3},{x:86,y:3},{x:92,y:5},{x:98,y:7},{x:105,y:9},{x:111,y:11},{x:118,y:9},{x:124,y:7},{x:131,y:5},{x:137,y:3},{x:138,y:3},{x:144,y:5},{x:150,y:7},{x:157,y:9},{x:163,y:11},{x:170,y:9},{x:176,y:7},{x:183,y:5},{x:189,y:3},{x:190,y:3},{x:196,y:5},{x:202,y:7},{x:209,y:9}], enemies:[{type:'spiny',x:12*16,y:200},{type:'spiny',x:19*16,y:200},{type:'koopa',x:26*16,y:200},{type:'spiny',x:39*16,y:200},{type:'spiny',x:46*16,y:200},{type:'koopa',x:53*16,y:200},{type:'spiny',x:65*16,y:200},{type:'spiny',x:72*16,y:200},{type:'koopa',x:79*16,y:200},{type:'spiny',x:91*16,y:200},{type:'spiny',x:98*16,y:200},{type:'koopa',x:105*16,y:200},{type:'spiny',x:117*16,y:200},{type:'spiny',x:124*16,y:200},{type:'koopa',x:131*16,y:200},{type:'spiny',x:143*16,y:200},{type:'spiny',x:150*16,y:200},{type:'koopa',x:157*16,y:200},{type:'spiny',x:169*16,y:200},{type:'spiny',x:176*16,y:200},{type:'koopa',x:183*16,y:200},{type:'spiny',x:195*16,y:200},{type:'spiny',x:202*16,y:200},{type:'koopa',x:209*16,y:200}], coins:[[3,14],[4,14],[5,14],[32,14],[33,14],[57,14],[58,14],[108,14],[109,14],[160,14],[161,14],[208,14],[209,14],[210,14]], pipes:[], movingPlatforms:[{x:9*16,y:13*16,w:48,axis:'x',range:48,speed:60},{x:44*16,y:11*16,w:48,axis:'y',range:64,speed:65},{x:96*16,y:11*16,w:48,axis:'x',range:96,speed:90},{x:148*16,y:11*16,w:48,axis:'y',range:80,speed:85},{x:200*16,y:9*16,w:48,axis:'x',range:112,speed:100}], spikes:[{x:8*16,y:14*16+4},{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:11*16,y:14*16+4},{x:56*16,y:14*16+4},{x:57*16,y:14*16+4},{x:107*16,y:14*16+4},{x:108*16,y:14*16+4},{x:159*16,y:14*16+4},{x:160*16,y:14*16+4},{x:207*16,y:14*16+4},{x:208*16,y:14*16+4}] },
 
-  '3-5': { world:3, level:5, name:'The Frozen King', theme:'castle', width:3200, height:270, timeLimit:260, music:'boss', bgColor:0x001133, start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600}, grounds:[{x:0,w:200}], platforms:[{x:5,y:11,w:3},{x:11,y:9,w:4},{x:18,y:7,w:3},{x:24,y:5,w:4},{x:31,y:3,w:3},{x:37,y:5,w:4},{x:44,y:7,w:3},{x:50,y:9,w:4},{x:57,y:11,w:3},{x:63,y:9,w:4},{x:70,y:7,w:3},{x:76,y:5,w:4},{x:83,y:3,w:3},{x:89,y:5,w:4},{x:96,y:7,w:3},{x:102,y:9,w:4},{x:109,y:11,w:3},{x:115,y:9,w:4},{x:122,y:7,w:3},{x:128,y:5,w:4},{x:135,y:3,w:3},{x:141,y:5,w:4},{x:148,y:7,w:3},{x:154,y:9,w:4},{x:161,y:11,w:3},{x:167,y:9,w:4},{x:174,y:7,w:3},{x:180,y:5,w:4},{x:187,y:3,w:3},{x:193,y:5,w:4},{x:200,y:7,w:3},{x:206,y:9,w:5}], questions:[{x:6,y:9,item:'star'},{x:12,y:7,item:'mushroom'},{x:19,y:5,item:'fireflower'},{x:25,y:3,item:'star'},{x:32,y:1,item:'mushroom'},{x:38,y:3,item:'star'},{x:45,y:5,item:'coin'},{x:51,y:7,item:'mushroom'},{x:58,y:9,item:'star'},{x:64,y:7,item:'coin'},{x:71,y:5,item:'star'},{x:77,y:3,item:'fireflower'},{x:84,y:1,item:'star'},{x:90,y:3,item:'mushroom'},{x:97,y:5,item:'coin'},{x:103,y:7,item:'star'},{x:110,y:9,item:'mushroom'},{x:116,y:7,item:'fireflower'},{x:123,y:5,item:'star'},{x:129,y:3,item:'coin'},{x:136,y:1,item:'star'},{x:142,y:3,item:'mushroom'},{x:149,y:5,item:'coin'},{x:155,y:7,item:'star'},{x:162,y:9,item:'mushroom'},{x:168,y:7,item:'fireflower'},{x:175,y:5,item:'star'},{x:181,y:3,item:'coin'},{x:188,y:1,item:'star'},{x:194,y:3,item:'mushroom'},{x:201,y:5,item:'coin'},{x:207,y:7,item:'star'}], bricks:[{x:7,y:9},{x:8,y:9},{x:13,y:7},{x:20,y:5},{x:26,y:3},{x:33,y:1},{x:34,y:1},{x:39,y:3},{x:46,y:5},{x:52,y:7},{x:59,y:9},{x:65,y:7},{x:72,y:5},{x:78,y:3},{x:85,y:1},{x:86,y:1},{x:91,y:3},{x:98,y:5},{x:104,y:7},{x:111,y:9},{x:117,y:7},{x:124,y:5},{x:130,y:3},{x:137,y:1},{x:138,y:1},{x:143,y:3},{x:150,y:5},{x:156,y:7},{x:163,y:9},{x:169,y:7},{x:176,y:5},{x:182,y:3},{x:189,y:1},{x:190,y:1},{x:195,y:3},{x:202,y:5},{x:208,y:7}], enemies:[{type:'spiny',x:11*16,y:200},{type:'spiny',x:18*16,y:200},{type:'koopa',x:25*16,y:200},{type:'spiny',x:37*16,y:200},{type:'spiny',x:44*16,y:200},{type:'koopa',x:51*16,y:200},{type:'spiny',x:63*16,y:200},{type:'spiny',x:70*16,y:200},{type:'koopa',x:77*16,y:200},{type:'spiny',x:89*16,y:200},{type:'spiny',x:96*16,y:200},{type:'koopa',x:103*16,y:200},{type:'spiny',x:115*16,y:200},{type:'spiny',x:122*16,y:200},{type:'koopa',x:129*16,y:200},{type:'spiny',x:141*16,y:200},{type:'spiny',x:148*16,y:200},{type:'koopa',x:155*16,y:200},{type:'spiny',x:167*16,y:200},{type:'spiny',x:174*16,y:200},{type:'koopa',x:181*16,y:200},{type:'spiny',x:193*16,y:200},{type:'spiny',x:200*16,y:200},{type:'koopa',x:207*16,y:200}], coins:[[3,14],[4,14],[5,14],[38,14],[39,14],[40,14],[89,14],[90,14],[141,14],[142,14],[193,14],[194,14],[205,14],[206,14],[207,14]], pipes:[], movingPlatforms:[{x:31*16,y:9*16,w:48,axis:'x',range:112,speed:90},{x:83*16,y:7*16,w:48,axis:'y',range:96,speed:85},{x:135*16,y:9*16,w:48,axis:'x',range:128,speed:100},{x:187*16,y:7*16,w:48,axis:'y',range:112,speed:110}], spikes:[{x:8*16,y:14*16+4},{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:35*16,y:14*16+4},{x:36*16,y:14*16+4},{x:37*16,y:14*16+4},{x:82*16,y:14*16+4},{x:83*16,y:14*16+4},{x:84*16,y:14*16+4},{x:133*16,y:14*16+4},{x:134*16,y:14*16+4},{x:135*16,y:14*16+4},{x:184*16,y:14*16+4},{x:185*16,y:14*16+4},{x:186*16,y:14*16+4}] },
+  '3-5': { world:3, level:5, name:'The Frozen King', boss:{x:3020,y:190,type:'frostgiant'}, theme:'castle', width:3200, height:270, timeLimit:260, music:'boss', bgColor:0x001133, start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600}, grounds:[{x:0,w:200}], platforms:[{x:5,y:11,w:3},{x:11,y:9,w:4},{x:18,y:7,w:3},{x:24,y:5,w:4},{x:31,y:3,w:3},{x:37,y:5,w:4},{x:44,y:7,w:3},{x:50,y:9,w:4},{x:57,y:11,w:3},{x:63,y:9,w:4},{x:70,y:7,w:3},{x:76,y:5,w:4},{x:83,y:3,w:3},{x:89,y:5,w:4},{x:96,y:7,w:3},{x:102,y:9,w:4},{x:109,y:11,w:3},{x:115,y:9,w:4},{x:122,y:7,w:3},{x:128,y:5,w:4},{x:135,y:3,w:3},{x:141,y:5,w:4},{x:148,y:7,w:3},{x:154,y:9,w:4},{x:161,y:11,w:3},{x:167,y:9,w:4},{x:174,y:7,w:3},{x:180,y:5,w:4},{x:187,y:3,w:3},{x:193,y:5,w:4},{x:200,y:7,w:3},{x:206,y:9,w:5}], questions:[{x:6,y:9,item:'star'},{x:12,y:7,item:'mushroom'},{x:19,y:5,item:'fireflower'},{x:25,y:3,item:'star'},{x:32,y:1,item:'mushroom'},{x:38,y:3,item:'star'},{x:45,y:5,item:'coin'},{x:51,y:7,item:'mushroom'},{x:58,y:9,item:'star'},{x:64,y:7,item:'coin'},{x:71,y:5,item:'star'},{x:77,y:3,item:'fireflower'},{x:84,y:1,item:'star'},{x:90,y:3,item:'mushroom'},{x:97,y:5,item:'coin'},{x:103,y:7,item:'star'},{x:110,y:9,item:'mushroom'},{x:116,y:7,item:'fireflower'},{x:123,y:5,item:'star'},{x:129,y:3,item:'coin'},{x:136,y:1,item:'star'},{x:142,y:3,item:'mushroom'},{x:149,y:5,item:'coin'},{x:155,y:7,item:'star'},{x:162,y:9,item:'mushroom'},{x:168,y:7,item:'fireflower'},{x:175,y:5,item:'star'},{x:181,y:3,item:'coin'},{x:188,y:1,item:'star'},{x:194,y:3,item:'mushroom'},{x:201,y:5,item:'coin'},{x:207,y:7,item:'star'}], bricks:[{x:7,y:9},{x:8,y:9},{x:13,y:7},{x:20,y:5},{x:26,y:3},{x:33,y:1},{x:34,y:1},{x:39,y:3},{x:46,y:5},{x:52,y:7},{x:59,y:9},{x:65,y:7},{x:72,y:5},{x:78,y:3},{x:85,y:1},{x:86,y:1},{x:91,y:3},{x:98,y:5},{x:104,y:7},{x:111,y:9},{x:117,y:7},{x:124,y:5},{x:130,y:3},{x:137,y:1},{x:138,y:1},{x:143,y:3},{x:150,y:5},{x:156,y:7},{x:163,y:9},{x:169,y:7},{x:176,y:5},{x:182,y:3},{x:189,y:1},{x:190,y:1},{x:195,y:3},{x:202,y:5},{x:208,y:7}], enemies:[{type:'spiny',x:11*16,y:200},{type:'spiny',x:18*16,y:200},{type:'koopa',x:25*16,y:200},{type:'spiny',x:37*16,y:200},{type:'spiny',x:44*16,y:200},{type:'koopa',x:51*16,y:200},{type:'spiny',x:63*16,y:200},{type:'spiny',x:70*16,y:200},{type:'koopa',x:77*16,y:200},{type:'spiny',x:89*16,y:200},{type:'spiny',x:96*16,y:200},{type:'koopa',x:103*16,y:200},{type:'spiny',x:115*16,y:200},{type:'spiny',x:122*16,y:200},{type:'koopa',x:129*16,y:200},{type:'spiny',x:141*16,y:200},{type:'spiny',x:148*16,y:200},{type:'koopa',x:155*16,y:200},{type:'spiny',x:167*16,y:200},{type:'spiny',x:174*16,y:200},{type:'koopa',x:181*16,y:200},{type:'spiny',x:193*16,y:200},{type:'spiny',x:200*16,y:200},{type:'koopa',x:207*16,y:200}], coins:[[3,14],[4,14],[5,14],[38,14],[39,14],[40,14],[89,14],[90,14],[141,14],[142,14],[193,14],[194,14],[205,14],[206,14],[207,14]], pipes:[], movingPlatforms:[{x:31*16,y:9*16,w:48,axis:'x',range:112,speed:90},{x:83*16,y:7*16,w:48,axis:'y',range:96,speed:85},{x:135*16,y:9*16,w:48,axis:'x',range:128,speed:100},{x:187*16,y:7*16,w:48,axis:'y',range:112,speed:110}], spikes:[{x:8*16,y:14*16+4},{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:35*16,y:14*16+4},{x:36*16,y:14*16+4},{x:37*16,y:14*16+4},{x:82*16,y:14*16+4},{x:83*16,y:14*16+4},{x:84*16,y:14*16+4},{x:133*16,y:14*16+4},{x:134*16,y:14*16+4},{x:135*16,y:14*16+4},{x:184*16,y:14*16+4},{x:185*16,y:14*16+4},{x:186*16,y:14*16+4}] },
+  // ═══════════════════════════════════════════════════════════════
+  // WORLD 4 — STAR DIMENSION (unlocked by 3-starring Worlds 1-3)
+  // ═══════════════════════════════════════════════════════════════
+
+  '4-1': {
+    world: 4, level: 1, name: 'Event Horizon', theme: 'void',
+    width: 3840, height: 270, timeLimit: 300, music: 'world4',
+    bgColor: 0x110022,
+    start: { x: 48, y: 210 },
+    flagpole: { x: 3760 },
+    checkpoint: { x: 1920 },
+    grounds: [{ x: 0, w: 10 }, { x: 230, w: 10 }],
+    platforms: [
+      {x:6,y:13,w:4},{x:14,y:11,w:3},{x:21,y:9,w:4},{x:29,y:7,w:3},
+      {x:36,y:9,w:4},{x:44,y:11,w:3},{x:51,y:13,w:4},
+      {x:60,y:11,w:3},{x:67,y:9,w:4},{x:75,y:7,w:3},{x:82,y:5,w:4},
+      {x:90,y:7,w:3},{x:97,y:9,w:4},{x:105,y:11,w:3},
+      {x:112,y:9,w:4},{x:120,y:7,w:3},{x:127,y:5,w:4},{x:135,y:3,w:3},
+      {x:142,y:5,w:4},{x:150,y:7,w:3},{x:157,y:9,w:4},{x:165,y:11,w:3},
+      {x:172,y:9,w:4},{x:180,y:7,w:3},{x:187,y:5,w:4},{x:195,y:3,w:3},
+      {x:202,y:5,w:4},{x:210,y:7,w:3},{x:217,y:9,w:4},{x:225,y:11,w:3},
+      {x:232,y:13,w:8},
+    ],
+    questions:[
+      {x:7,y:11,item:'star'},{x:15,y:9,item:'mushroom'},{x:22,y:7,item:'coin'},
+      {x:30,y:5,item:'star'},{x:61,y:9,item:'coin'},{x:68,y:7,item:'mushroom'},
+      {x:76,y:5,item:'star'},{x:83,y:3,item:'fireflower'},
+      {x:113,y:7,item:'coin'},{x:121,y:5,item:'star'},{x:128,y:3,item:'mushroom'},{x:136,y:1,item:'star'},
+      {x:173,y:7,item:'coin'},{x:181,y:5,item:'star'},{x:188,y:3,item:'mushroom'},{x:196,y:1,item:'star'},
+      {x:218,y:7,item:'fireflower'},{x:226,y:9,item:'star'},
+    ],
+    bricks:[
+      {x:8,y:11},{x:9,y:11},{x:16,y:9},{x:23,y:7},{x:31,y:5},
+      {x:62,y:9},{x:69,y:7},{x:77,y:5},{x:84,y:3},{x:85,y:3},
+      {x:114,y:7},{x:122,y:5},{x:129,y:3},{x:137,y:1},{x:138,y:1},
+      {x:174,y:7},{x:182,y:5},{x:189,y:3},{x:197,y:1},{x:198,y:1},
+      {x:219,y:7},{x:227,y:9},
+    ],
+    enemies:[
+      {type:'spiny',x:14*16,y:200},{type:'koopa',x:22*16,y:200},
+      {type:'spiny',x:30*16,y:200},{type:'spiny',x:37*16,y:200},
+      {type:'koopa',x:61*16,y:200},{type:'spiny',x:68*16,y:200},
+      {type:'spiny',x:76*16,y:200},{type:'koopa',x:83*16,y:200},
+      {type:'spiny',x:113*16,y:200},{type:'spiny',x:121*16,y:200},
+      {type:'koopa',x:128*16,y:200},{type:'spiny',x:136*16,y:200},
+      {type:'spiny',x:173*16,y:200},{type:'koopa',x:181*16,y:200},
+      {type:'spiny',x:188*16,y:200},{type:'spiny',x:196*16,y:200},
+      {type:'koopa',x:218*16,y:200},{type:'spiny',x:226*16,y:200},
+    ],
+    coins:[
+      [3,14],[4,14],[5,14],
+      [57,14],[58,14],[59,14],
+      [109,14],[110,14],[111,14],
+      [168,14],[169,14],[170,14],
+      [232,14],[233,14],[234,14],[235,14],[236,14],
+    ],
+    pipes:[],
+    movingPlatforms:[
+      {x:55*16,y:11*16,w:48,axis:'x',range:64,speed:80},
+      {x:106*16,y:9*16,w:48,axis:'y',range:80,speed:75},
+      {x:165*16,y:9*16,w:48,axis:'x',range:96,speed:90},
+      {x:215*16,y:9*16,w:48,axis:'y',range:72,speed:85},
+    ],
+    spikes:[
+      {x:10*16,y:14*16+4},{x:11*16,y:14*16+4},{x:12*16,y:14*16+4},{x:13*16,y:14*16+4},
+      {x:55*16,y:14*16+4},{x:56*16,y:14*16+4},
+      {x:108*16,y:14*16+4},{x:109*16,y:14*16+4},
+      {x:166*16,y:14*16+4},{x:167*16,y:14*16+4},
+    ],
+    lava:[{x:10,w:45},{x:56,w:52},{x:109,w:55},{x:166,w:64}],
+  },
+
+  '4-2': {
+    world:4, level:2, name:'Nebula Rush', theme:'void',
+    width:3520, height:270, timeLimit:260, music:'world4',
+    bgColor:0x1a0033,
+    start:{x:48,y:200}, flagpole:{x:3440}, checkpoint:{x:1760},
+    grounds:[{x:0,w:6},{x:214,w:6}],
+    platforms:[
+      {x:4,y:12,w:3},{x:10,y:10,w:3},{x:17,y:8,w:3},{x:24,y:6,w:3},{x:31,y:4,w:3},
+      {x:38,y:6,w:3},{x:45,y:8,w:3},{x:52,y:10,w:3},{x:59,y:8,w:3},{x:66,y:6,w:3},
+      {x:73,y:4,w:3},{x:80,y:6,w:3},{x:87,y:8,w:3},{x:94,y:6,w:3},{x:101,y:4,w:3},
+      {x:108,y:6,w:3},{x:115,y:8,w:3},{x:122,y:10,w:3},{x:129,y:8,w:3},{x:136,y:6,w:3},
+      {x:143,y:4,w:3},{x:150,y:6,w:3},{x:157,y:8,w:3},{x:164,y:6,w:3},{x:171,y:4,w:3},
+      {x:178,y:6,w:3},{x:185,y:8,w:3},{x:192,y:10,w:3},{x:199,y:8,w:3},{x:206,y:6,w:3},
+      {x:213,y:4,w:3},{x:218,y:12,w:3},
+    ],
+    questions:[
+      {x:5,y:10,item:'star'},{x:11,y:8,item:'coin'},{x:18,y:6,item:'mushroom'},{x:25,y:4,item:'star'},
+      {x:32,y:2,item:'fireflower'},{x:60,y:6,item:'star'},{x:67,y:4,item:'coin'},{x:74,y:2,item:'star'},
+      {x:102,y:2,item:'fireflower'},{x:109,y:4,item:'coin'},{x:116,y:6,item:'star'},
+      {x:144,y:2,item:'star'},{x:151,y:4,item:'mushroom'},{x:158,y:6,item:'coin'},{x:165,y:4,item:'star'},
+      {x:200,y:6,item:'star'},{x:207,y:4,item:'fireflower'},{x:214,y:2,item:'star'},
+    ],
+    bricks:[
+      {x:6,y:10},{x:12,y:8},{x:19,y:6},{x:26,y:4},{x:33,y:2},{x:34,y:2},
+      {x:61,y:6},{x:68,y:4},{x:75,y:2},{x:76,y:2},
+      {x:103,y:2},{x:104,y:2},{x:110,y:4},{x:117,y:6},
+      {x:145,y:2},{x:146,y:2},{x:152,y:4},{x:159,y:6},{x:166,y:4},
+      {x:201,y:6},{x:208,y:4},{x:215,y:2},{x:216,y:2},
+    ],
+    enemies:[
+      {type:'spiny',x:11*16,y:200},{type:'spiny',x:18*16,y:200},{type:'koopa',x:25*16,y:200},
+      {type:'spiny',x:60*16,y:200},{type:'spiny',x:67*16,y:200},{type:'koopa',x:74*16,y:200},
+      {type:'spiny',x:102*16,y:200},{type:'spiny',x:109*16,y:200},{type:'koopa',x:116*16,y:200},
+      {type:'spiny',x:144*16,y:200},{type:'spiny',x:151*16,y:200},{type:'koopa',x:158*16,y:200},
+      {type:'spiny',x:165*16,y:200},{type:'spiny',x:200*16,y:200},{type:'koopa',x:207*16,y:200},
+    ],
+    coins:[[3,14],[4,14],[5,14],[56,14],[57,14],[100,14],[101,14],[140,14],[141,14],[196,14],[197,14]],
+    pipes:[],
+    movingPlatforms:[
+      {x:36*16,y:8*16,w:48,axis:'x',range:80,speed:90},
+      {x:88*16,y:6*16,w:48,axis:'y',range:80,speed:85},
+      {x:140*16,y:8*16,w:48,axis:'x',range:96,speed:100},
+      {x:192*16,y:6*16,w:48,axis:'y',range:80,speed:95},
+    ],
+    spikes:[
+      {x:6*16,y:14*16+4},{x:7*16,y:14*16+4},{x:8*16,y:14*16+4},
+      {x:56*16,y:14*16+4},{x:57*16,y:14*16+4},
+      {x:100*16,y:14*16+4},{x:101*16,y:14*16+4},
+      {x:140*16,y:14*16+4},{x:141*16,y:14*16+4},
+    ],
+    lava:[{x:6,w:50},{x:57,w:42},{x:100,w:40},{x:141,w:50}],
+  },
+
+  '4-3': { world:4, level:3, name:'Nebula Core', theme:'void', width:3200, height:270, timeLimit:240, music:'world4', bgColor:0x220044, start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600}, grounds:[{x:0,w:200}], platforms:[{x:5,y:11,w:3},{x:11,y:9,w:3},{x:17,y:7,w:3},{x:23,y:5,w:3},{x:29,y:3,w:3},{x:35,y:5,w:3},{x:41,y:7,w:3},{x:47,y:9,w:3},{x:53,y:11,w:3},{x:59,y:9,w:3},{x:65,y:7,w:3},{x:71,y:5,w:3},{x:77,y:3,w:3},{x:83,y:5,w:3},{x:89,y:7,w:3},{x:95,y:9,w:3},{x:101,y:11,w:3},{x:107,y:9,w:3},{x:113,y:7,w:3},{x:119,y:5,w:3},{x:125,y:3,w:3},{x:131,y:5,w:3},{x:137,y:7,w:3},{x:143,y:9,w:3},{x:149,y:11,w:3},{x:155,y:9,w:3},{x:161,y:7,w:3},{x:167,y:5,w:3},{x:173,y:3,w:3},{x:179,y:5,w:3},{x:185,y:7,w:3},{x:191,y:9,w:3},{x:197,y:11,w:3}], questions:[{x:6,y:9,item:'star'},{x:12,y:7,item:'coin'},{x:18,y:5,item:'star'},{x:24,y:3,item:'mushroom'},{x:30,y:1,item:'fireflower'},{x:60,y:7,item:'star'},{x:66,y:5,item:'coin'},{x:72,y:3,item:'star'},{x:78,y:1,item:'mushroom'},{x:108,y:7,item:'star'},{x:114,y:5,item:'coin'},{x:120,y:3,item:'star'},{x:126,y:1,item:'fireflower'},{x:156,y:7,item:'star'},{x:162,y:5,item:'coin'},{x:168,y:3,item:'star'},{x:174,y:1,item:'mushroom'},{x:192,y:7,item:'fireflower'},{x:198,y:9,item:'star'}], bricks:[{x:7,y:9},{x:13,y:7},{x:19,y:5},{x:25,y:3},{x:31,y:1},{x:32,y:1},{x:61,y:7},{x:67,y:5},{x:73,y:3},{x:79,y:1},{x:80,y:1},{x:109,y:7},{x:115,y:5},{x:121,y:3},{x:127,y:1},{x:128,y:1},{x:157,y:7},{x:163,y:5},{x:169,y:3},{x:175,y:1},{x:176,y:1},{x:193,y:7},{x:199,y:9}], enemies:[{type:'spiny',x:12*16,y:200},{type:'spiny',x:18*16,y:200},{type:'spiny',x:24*16,y:200},{type:'koopa',x:30*16,y:200},{type:'spiny',x:60*16,y:200},{type:'spiny',x:66*16,y:200},{type:'spiny',x:72*16,y:200},{type:'koopa',x:78*16,y:200},{type:'spiny',x:108*16,y:200},{type:'spiny',x:114*16,y:200},{type:'spiny',x:120*16,y:200},{type:'koopa',x:126*16,y:200},{type:'spiny',x:156*16,y:200},{type:'spiny',x:162*16,y:200},{type:'spiny',x:168*16,y:200},{type:'koopa',x:174*16,y:200},{type:'spiny',x:192*16,y:200},{type:'spiny',x:199*16,y:200}], coins:[[3,14],[4,14],[5,14],[58,14],[59,14],[106,14],[107,14],[154,14],[155,14],[196,14],[197,14]], pipes:[], movingPlatforms:[{x:47*16,y:9*16,w:48,axis:'x',range:80,speed:100},{x:95*16,y:7*16,w:48,axis:'y',range:80,speed:95},{x:143*16,y:9*16,w:48,axis:'x',range:96,speed:110},{x:191*16,y:7*16,w:48,axis:'y',range:80,speed:100}], spikes:[{x:8*16,y:14*16+4},{x:9*16,y:14*16+4},{x:56*16,y:14*16+4},{x:57*16,y:14*16+4},{x:104*16,y:14*16+4},{x:105*16,y:14*16+4},{x:152*16,y:14*16+4},{x:153*16,y:14*16+4},{x:188*16,y:14*16+4},{x:189*16,y:14*16+4}], lava:[{x:8,w:48},{x:57,w:47},{x:105,w:47},{x:153,w:35}] },
+
+  '4-4': { world:4, level:4, name:'Singularity', theme:'void', width:3520, height:270, timeLimit:220, music:'world4', bgColor:0x330055, start:{x:48,y:200}, flagpole:{x:3440}, checkpoint:{x:1760}, grounds:[{x:0,w:6},{x:214,w:6}], platforms:[{x:4,y:13,w:3},{x:10,y:11,w:3},{x:17,y:9,w:3},{x:24,y:7,w:3},{x:31,y:5,w:3},{x:38,y:3,w:3},{x:45,y:5,w:3},{x:52,y:7,w:3},{x:59,y:9,w:3},{x:66,y:11,w:3},{x:73,y:9,w:3},{x:80,y:7,w:3},{x:87,y:5,w:3},{x:94,y:3,w:3},{x:101,y:5,w:3},{x:108,y:7,w:3},{x:115,y:9,w:3},{x:122,y:11,w:3},{x:129,y:9,w:3},{x:136,y:7,w:3},{x:143,y:5,w:3},{x:150,y:3,w:3},{x:157,y:5,w:3},{x:164,y:7,w:3},{x:171,y:9,w:3},{x:178,y:11,w:3},{x:185,y:9,w:3},{x:192,y:7,w:3},{x:199,y:5,w:3},{x:206,y:3,w:3},{x:213,y:5,w:3},{x:218,y:13,w:3}], questions:[{x:5,y:11,item:'star'},{x:11,y:9,item:'coin'},{x:18,y:7,item:'star'},{x:25,y:5,item:'mushroom'},{x:32,y:3,item:'star'},{x:39,y:1,item:'fireflower'},{x:67,y:9,item:'star'},{x:74,y:7,item:'coin'},{x:81,y:5,item:'star'},{x:88,y:3,item:'mushroom'},{x:95,y:1,item:'star'},{x:123,y:9,item:'star'},{x:130,y:7,item:'coin'},{x:137,y:5,item:'star'},{x:144,y:3,item:'mushroom'},{x:151,y:1,item:'star'},{x:172,y:7,item:'fireflower'},{x:179,y:9,item:'star'},{x:193,y:5,item:'star'},{x:200,y:3,item:'coin'},{x:207,y:1,item:'star'},{x:214,y:3,item:'star'}], bricks:[{x:6,y:11},{x:12,y:9},{x:19,y:7},{x:26,y:5},{x:33,y:3},{x:40,y:1},{x:41,y:1},{x:68,y:9},{x:75,y:7},{x:82,y:5},{x:89,y:3},{x:96,y:1},{x:97,y:1},{x:124,y:9},{x:131,y:7},{x:138,y:5},{x:145,y:3},{x:152,y:1},{x:153,y:1},{x:173,y:7},{x:180,y:9},{x:194,y:5},{x:201,y:3},{x:208,y:1},{x:209,y:1},{x:215,y:3}], enemies:[{type:'spiny',x:11*16,y:200},{type:'spiny',x:18*16,y:200},{type:'spiny',x:25*16,y:200},{type:'spiny',x:32*16,y:200},{type:'koopa',x:39*16,y:200},{type:'spiny',x:67*16,y:200},{type:'spiny',x:74*16,y:200},{type:'spiny',x:81*16,y:200},{type:'koopa',x:88*16,y:200},{type:'spiny',x:95*16,y:200},{type:'spiny',x:123*16,y:200},{type:'spiny',x:130*16,y:200},{type:'spiny',x:137*16,y:200},{type:'koopa',x:144*16,y:200},{type:'spiny',x:151*16,y:200},{type:'spiny',x:172*16,y:200},{type:'spiny',x:179*16,y:200},{type:'koopa',x:186*16,y:200},{type:'spiny',x:193*16,y:200},{type:'spiny',x:200*16,y:200},{type:'spiny',x:207*16,y:200}], coins:[[3,14],[4,14],[5,14],[62,14],[63,14],[113,14],[114,14],[167,14],[168,14],[215,14],[216,14]], pipes:[], movingPlatforms:[{x:45*16,y:11*16,w:48,axis:'x',range:96,speed:110},{x:101*16,y:9*16,w:48,axis:'y',range:96,speed:105},{x:157*16,y:9*16,w:48,axis:'x',range:112,speed:120},{x:213*16,y:7*16,w:48,axis:'y',range:96,speed:115}], spikes:[{x:6*16,y:14*16+4},{x:7*16,y:14*16+4},{x:8*16,y:14*16+4},{x:60*16,y:14*16+4},{x:61*16,y:14*16+4},{x:62*16,y:14*16+4},{x:111*16,y:14*16+4},{x:112*16,y:14*16+4},{x:113*16,y:14*16+4},{x:165*16,y:14*16+4},{x:166*16,y:14*16+4},{x:167*16,y:14*16+4}], lava:[{x:6,w:54},{x:61,w:50},{x:112,w:53},{x:166,w:47}] },
+
+  '4-5': {
+    world:4, level:5, name:"The Void Lord", theme:'void',
+    boss:{x:3020,y:190,type:'voidlord'},
+    width:3200, height:270, timeLimit:200, music:'boss_hard',
+    bgColor:0x000011,
+    start:{x:48,y:200}, flagpole:{x:3120}, checkpoint:{x:1600},
+    grounds:[{x:0,w:200}],
+    platforms:[
+      {x:5,y:11,w:3},{x:11,y:9,w:3},{x:17,y:7,w:3},{x:23,y:5,w:3},{x:29,y:3,w:3},
+      {x:35,y:5,w:3},{x:41,y:7,w:3},{x:47,y:9,w:3},{x:53,y:11,w:3},
+      {x:59,y:9,w:3},{x:65,y:7,w:3},{x:71,y:5,w:3},{x:77,y:3,w:3},
+      {x:83,y:5,w:3},{x:89,y:7,w:3},{x:95,y:9,w:3},{x:101,y:11,w:3},
+      {x:107,y:9,w:3},{x:113,y:7,w:3},{x:119,y:5,w:3},{x:125,y:3,w:3},
+      {x:131,y:5,w:3},{x:137,y:7,w:3},{x:143,y:9,w:3},{x:149,y:11,w:3},
+      {x:155,y:9,w:3},{x:161,y:7,w:3},{x:167,y:5,w:3},{x:173,y:3,w:3},
+      {x:179,y:5,w:3},{x:185,y:7,w:3},{x:191,y:9,w:3},{x:197,y:11,w:3},
+    ],
+    questions:[
+      {x:6,y:9,item:'star'},{x:12,y:7,item:'star'},{x:18,y:5,item:'fireflower'},{x:24,y:3,item:'star'},
+      {x:60,y:7,item:'star'},{x:66,y:5,item:'mushroom'},{x:72,y:3,item:'star'},{x:78,y:1,item:'star'},
+      {x:108,y:7,item:'star'},{x:114,y:5,item:'star'},{x:120,y:3,item:'fireflower'},{x:126,y:1,item:'star'},
+      {x:156,y:7,item:'star'},{x:162,y:5,item:'mushroom'},{x:168,y:3,item:'star'},{x:174,y:1,item:'star'},
+      {x:186,y:5,item:'star'},{x:192,y:7,item:'fireflower'},{x:198,y:9,item:'star'},
+    ],
+    bricks:[
+      {x:7,y:9},{x:13,y:7},{x:19,y:5},{x:25,y:3},{x:30,y:1},{x:31,y:1},
+      {x:61,y:7},{x:67,y:5},{x:73,y:3},{x:79,y:1},{x:80,y:1},
+      {x:109,y:7},{x:115,y:5},{x:121,y:3},{x:127,y:1},{x:128,y:1},
+      {x:157,y:7},{x:163,y:5},{x:169,y:3},{x:175,y:1},{x:176,y:1},
+      {x:187,y:5},{x:193,y:7},{x:199,y:9},
+    ],
+    enemies:[
+      {type:'spiny',x:12*16,y:200},{type:'spiny',x:18*16,y:200},{type:'spiny',x:24*16,y:200},{type:'koopa',x:30*16,y:200},
+      {type:'spiny',x:60*16,y:200},{type:'spiny',x:66*16,y:200},{type:'spiny',x:72*16,y:200},{type:'koopa',x:78*16,y:200},
+      {type:'spiny',x:108*16,y:200},{type:'spiny',x:114*16,y:200},{type:'spiny',x:120*16,y:200},{type:'koopa',x:126*16,y:200},
+      {type:'spiny',x:156*16,y:200},{type:'spiny',x:162*16,y:200},{type:'spiny',x:168*16,y:200},{type:'koopa',x:174*16,y:200},
+      {type:'spiny',x:186*16,y:200},{type:'spiny',x:193*16,y:200},{type:'koopa',x:199*16,y:200},
+    ],
+    coins:[[3,14],[4,14],[5,14],[57,14],[58,14],[105,14],[106,14],[153,14],[154,14],[196,14],[197,14]],
+    pipes:[],
+    movingPlatforms:[
+      {x:47*16,y:9*16,w:48,axis:'x',range:96,speed:120},
+      {x:95*16,y:7*16,w:48,axis:'y',range:96,speed:115},
+      {x:143*16,y:9*16,w:48,axis:'x',range:112,speed:130},
+      {x:191*16,y:7*16,w:48,axis:'y',range:96,speed:125},
+    ],
+    spikes:[
+      {x:8*16,y:14*16+4},{x:9*16,y:14*16+4},{x:10*16,y:14*16+4},{x:11*16,y:14*16+4},
+      {x:55*16,y:14*16+4},{x:56*16,y:14*16+4},{x:57*16,y:14*16+4},
+      {x:103*16,y:14*16+4},{x:104*16,y:14*16+4},{x:105*16,y:14*16+4},
+      {x:151*16,y:14*16+4},{x:152*16,y:14*16+4},{x:153*16,y:14*16+4},
+      {x:188*16,y:14*16+4},{x:189*16,y:14*16+4},{x:190*16,y:14*16+4},
+    ],
+    lava:[{x:8,w:47},{x:56,w:47},{x:104,w:47},{x:152,w:35}],
+  },
 };
 
 export function getLevel(world, level) {
