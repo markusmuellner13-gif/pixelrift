@@ -1,6 +1,6 @@
 {
   "name": "pixelrift",
-  "version": "1.1.0",
+  "version": "1.4.0",
   "description": "PixelRift — Leap. Explore. Conquer. A pixel-art 2D platformer.",
   "type": "module",
   "main": "electron/main.js",

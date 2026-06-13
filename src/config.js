@@ -17,6 +17,16 @@ export const PLAYER_JUMP_VEL = -400;
 export const COYOTE_TIME = 120;
 export const JUMP_BUFFER_TIME = 100;
 
+// Momentum (Mario-style acceleration model, all px/s²)
+export const PLAYER_ACCEL = 900;        // ground acceleration toward target speed
+export const PLAYER_TURN_ACCEL = 2400;  // deceleration when reversing direction (skid)
+export const PLAYER_FRICTION = 900;     // ground deceleration when no input
+export const PLAYER_AIR_DRAG = 200;     // air deceleration when no input
+export const PLAYER_AIR_CONTROL = 0.65; // fraction of accel available mid-air
+export const SKID_MIN_SPEED = 130;      // speed above which reversing triggers a skid
+export const FALL_GRAVITY_BONUS = 350;  // extra gravity while falling (snappier arc)
+export const JUMP_SPEED_BONUS = 0.15;   // jump velocity gained per px/s of run speed
+
 // Dash
 export const DASH_SPEED = 420;
 export const DASH_DURATION = 160;     // ms
@@ -89,6 +99,23 @@ export const COLORS = {
   boss: 0xcc2222,
 };
 
+// Skin shop — palette overrides applied to the nova_* sprites.
+// Keys: G hat, R hat shadow, W shirt, B pants, S skin, E shoes, D eyes
+export const SKINS = [
+  { id: 'classic',   name: 'CLASSIC',   price: 0,    colors: null },
+  { id: 'crimson',   name: 'CRIMSON',   price: 150,  colors: { G: 0xcc2233, R: 0x771122, W: 0xffe4e4, B: 0x33112a } },
+  { id: 'shadow',    name: 'SHADOW',    price: 300,  colors: { G: 0x222233, R: 0x111122, W: 0x444455, B: 0x111118, D: 0xff2222 } },
+  { id: 'aqua',      name: 'AQUA',      price: 500,  colors: { G: 0x1199cc, R: 0x0d6688, W: 0xddffff, B: 0x115577 } },
+  { id: 'bubblegum', name: 'BUBBLEGUM', price: 750,  colors: { G: 0xff66aa, R: 0xcc3377, W: 0xfff0f5, B: 0x993366 } },
+  { id: 'gold',      name: 'GOLD',      price: 1200, colors: { G: 0xffcc00, R: 0xcc9900, W: 0xfff8dd, B: 0xaa7700, E: 0x886600 } },
+  { id: 'frost',     name: 'FROST',     price: 1800, colors: { G: 0x88ddff, R: 0x44aacc, W: 0xffffff, B: 0x4477aa, S: 0xeedfff, D: 0x2266ff } },
+  { id: 'void',      name: 'VOID',      price: 2500, colors: { G: 0x8800ff, R: 0x550099, W: 0x221133, B: 0x110022, D: 0xff44ff } },
+];
+
+// Daily streak — coins awarded per consecutive day, capped at day 7
+export const STREAK_COIN_BASE = 25;
+export const STREAK_DAY_CAP = 7;
+
 export const SCENES = {
   BOOT:       'BootScene',
   MENU:       'MainMenuScene',
@@ -100,6 +127,7 @@ export const SCENES = {
   GAMEOVER:   'GameOverScene',
   LEADERBOARD:'LeaderboardScene',
   DAILY:      'DailyChallengeScene',
+  SHOP:       'ShopScene',
 };
 
 // Supabase (optional — set in .env.local)

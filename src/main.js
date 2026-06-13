@@ -10,6 +10,7 @@ import LevelCompleteScene from './scenes/LevelCompleteScene.js';
 import GameOverScene from './scenes/GameOverScene.js';
 import LeaderboardScene from './scenes/LeaderboardScene.js';
 import DailyChallengeScene from './scenes/DailyChallengeScene.js';
+import ShopScene from './scenes/ShopScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -37,6 +38,7 @@ const config = {
     GameScene, UIScene, PauseScene,
     LevelCompleteScene, GameOverScene,
     LeaderboardScene, DailyChallengeScene,
+    ShopScene,
   ],
 };
 
@@ -46,7 +48,7 @@ async function start() {
   try {
     await document.fonts.load('16px "Press Start 2P"');
   } catch { /* font CDN unreachable — fall back to monospace, game still works */ }
-  new Phaser.Game(config);
+  window.__game = new Phaser.Game(config);
 }
 
 start();

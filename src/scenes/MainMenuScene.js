@@ -1,6 +1,7 @@
 import { SCENES, FONT, COLORS } from '../config.js';
 import { playMusic, SFX, setMusicEnabled, setSfxEnabled } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
+import { updateStreak } from '../systems/StreakSystem.js';
 
 export default class MainMenuScene extends Phaser.Scene {
   constructor() { super({ key: SCENES.MENU }); }
@@ -19,10 +20,14 @@ export default class MainMenuScene extends Phaser.Scene {
       fontSize: '10px', fontFamily: FONT, color: '#aaaaff',
     }).setOrigin(0.5);
 
+    // Daily streak — award once per calendar day
+    const streakInfo = updateStreak();
+
     // Menu options
     const options = [
       { label: '▶  PLAY',            scene: 'play' },
       { label: '⭐ DAILY CHALLENGE', scene: SCENES.DAILY },
+      { label: '🎨 SKIN SHOP',       scene: SCENES.SHOP },
       { label: '🏆 LEADERBOARD',     scene: SCENES.LEADERBOARD },
       { label: '⚙  SETTINGS',        scene: 'settings' },
     ];
@@ -32,7 +37,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this._options = options;
 
     options.forEach((opt, i) => {
-      const y = height * 0.48 + i * 26;
+      const y = height * 0.45 + i * 22;
       const txt = this.add.text(width / 2, y, opt.label, {
         fontSize: '11px', fontFamily: FONT,
         color: i === 0 ? '#ffd700' : '#ffffff',
@@ -50,6 +55,27 @@ export default class MainMenuScene extends Phaser.Scene {
       fontSize: '9px', fontFamily: FONT, color: '#ff8888',
     }).setOrigin(0.5);
 
+    // Streak + coin vault (top corners)
+    const streak = SaveSystem.get('streak') || 0;
+    this.add.text(8, 8, `🔥 ${streak} DAY${streak === 1 ? '' : 'S'}`, {
+      fontSize: '9px', fontFamily: FONT, color: '#ff8844', stroke: '#000', strokeThickness: 2,
+    });
+    this.add.text(width - 8, 8, `🪙 ${(SaveSystem.get('coinBank') || 0).toLocaleString()}`, {
+      fontSize: '9px', fontFamily: FONT, color: '#ffd700', stroke: '#000', strokeThickness: 2,
+    }).setOrigin(1, 0);
+
+    // First visit today — celebrate the streak reward
+    if (streakInfo.isNew) {
+      SFX.streak();
+      const pop = this.add.text(width / 2, height * 0.40,
+        `🔥 DAY ${streakInfo.streak} STREAK!  +${streakInfo.reward} 🪙`, {
+          fontSize: '11px', fontFamily: FONT, color: '#ffaa33',
+          stroke: '#000', strokeThickness: 3,
+        }).setOrigin(0.5).setDepth(50).setScale(0);
+      this.tweens.add({ targets: pop, scale: 1, duration: 400, ease: 'Back.easeOut' });
+      this.tweens.add({ targets: pop, alpha: 0, y: pop.y - 14, delay: 2600, duration: 600, onComplete: () => pop.destroy() });
+    }
+
     // Tap to start (mobile)
     const tap = this.add.text(width / 2, height * 0.96, 'TAP TO START', {
       fontSize: '9px', fontFamily: FONT, color: '#55ffaa',
@@ -59,7 +85,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     // Controls hint
     this.add.text(width / 2, height - 8,
-      'WASD/Arrows Move  Space Jump  Z Run  X Fire  🎮 Controller supported', {
+      'WASD/Arrows Move  Space Jump  Z Run  X Fire  R Retry  🎮 Controller supported', {
         fontSize: '7px', fontFamily: FONT, color: '#555577',
       }).setOrigin(0.5, 1);
 
@@ -95,7 +121,10 @@ export default class MainMenuScene extends Phaser.Scene {
         'moving_platform'
       ).setAlpha(0.3);
     }
-    const nova = this.add.image(w / 2 - 20, h * 0.40, 'nova_big_idle').setScale(2.5);
+    const skin = SaveSystem.get('selectedSkin') || 'classic';
+    let novaTex = skin === 'classic' ? 'nova_big_idle' : `nova_big_idle_${skin}`;
+    if (!this.textures.exists(novaTex)) novaTex = 'nova_big_idle';
+    const nova = this.add.image(w / 2 - 20, h * 0.40, novaTex).setScale(2.5);
     this.tweens.add({ targets: nova, y: nova.y - 5, duration: 700, yoyo: true, repeat: -1 });
   }
 
@@ -113,6 +142,7 @@ export default class MainMenuScene extends Phaser.Scene {
     SFX.menu_select();
     if (opt.scene === 'play')    { this.scene.start(SCENES.WORLDMAP); }
     else if (opt.scene === SCENES.DAILY) { this.scene.start(SCENES.DAILY); }
+    else if (opt.scene === SCENES.SHOP) { this.scene.start(SCENES.SHOP); }
     else if (opt.scene === SCENES.LEADERBOARD) { this.scene.start(SCENES.LEADERBOARD); }
     else if (opt.scene === 'settings') { this._showSettings(); }
   }

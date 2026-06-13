@@ -5,6 +5,8 @@ import {
   WALL_JUMP_VEL_X, WALL_JUMP_VEL_Y, WALL_SLIDE_GRAVITY,
   CROUCH_SPEED, CROUCH_SLIDE_SPEED, CROUCH_SLIDE_DURATION,
   MAGNET_RADIUS, MAGNET_PULL_SPEED, MAGNET_DURATION,
+  PLAYER_ACCEL, PLAYER_TURN_ACCEL, PLAYER_FRICTION, PLAYER_AIR_DRAG,
+  PLAYER_AIR_CONTROL, SKID_MIN_SPEED, FALL_GRAVITY_BONUS, JUMP_SPEED_BONUS,
 } from '../config.js';
 import { SFX } from '../systems/AudioSystem.js';
 import QuestSystem from '../systems/QuestSystem.js';
@@ -12,11 +14,23 @@ import SaveSystem from '../systems/SaveSystem.js';
 
 export const PLAYER_STATE = { SMALL: 'small', BIG: 'big', FIRE: 'fire' };
 
+/** Texture suffix for the currently equipped skin ('' for classic) */
+export function skinSuffix() {
+  const skin = SaveSystem.get('selectedSkin') || 'classic';
+  return skin === 'classic' ? '' : `_${skin}`;
+}
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
-    super(scene, x, y, 'nova_small_idle');
+    super(scene, x, y, `nova_small_idle${skinSuffix()}`);
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    this.skinSfx = skinSuffix();
+    // Fall back to classic if the saved skin's textures are missing
+    if (this.skinSfx && !scene.textures.exists(`nova_small_idle${this.skinSfx}`)) {
+      this.skinSfx = '';
+      this.setTexture('nova_small_idle');
+    }
 
     this.state = PLAYER_STATE.SMALL;
     this.isInvincible = false;
@@ -86,18 +100,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   _setupAnimations() {
     const a = this.scene.anims;
+    const s = this.skinSfx;
     const safe = (key, frames, fr, rpt) => {
       if (!a.exists(key)) a.create({ key, frames: frames.map(f => ({ key: f })), frameRate: fr, repeat: rpt });
     };
-    safe('nova_small_walk', ['nova_small_walk0','nova_small_walk1'], 8, -1);
-    safe('nova_small_idle', ['nova_small_idle'], 1, -1);
-    safe('nova_small_jump', ['nova_small_jump'], 1, -1);
-    safe('nova_big_walk',   ['nova_big_idle','nova_big_idle'], 8, -1);
-    safe('nova_big_idle',   ['nova_big_idle'], 1, -1);
-    safe('nova_big_jump',   ['nova_big_jump'], 1, -1);
-    safe('nova_fire_walk',  ['nova_fire_idle','nova_fire_idle'], 8, -1);
-    safe('nova_fire_idle',  ['nova_fire_idle'], 1, -1);
-    safe('nova_fire_jump',  ['nova_big_jump'], 1, -1);
+    safe(`nova_small_walk${s}`, [`nova_small_walk0${s}`,`nova_small_walk1${s}`], 8, -1);
+    safe(`nova_small_idle${s}`, [`nova_small_idle${s}`], 1, -1);
+    safe(`nova_small_jump${s}`, [`nova_small_jump${s}`], 1, -1);
+    safe(`nova_big_walk${s}`,   [`nova_big_idle${s}`,`nova_big_idle${s}`], 8, -1);
+    safe(`nova_big_idle${s}`,   [`nova_big_idle${s}`], 1, -1);
+    safe(`nova_big_jump${s}`,   [`nova_big_jump${s}`], 1, -1);
+    safe(`nova_fire_walk${s}`,  [`nova_fire_idle${s}`,`nova_fire_idle${s}`], 8, -1);
+    safe(`nova_fire_idle${s}`,  [`nova_fire_idle${s}`], 1, -1);
+    safe(`nova_fire_jump${s}`,  [`nova_big_jump${s}`], 1, -1);
   }
 
   setFireballs(group) { this.fireballs = group; }
@@ -135,11 +150,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
     if (this.wallJumpLock > 0) this.wallJumpLock -= delta;
 
-    // Wall slide — slow fall while touching wall
+    // Wall slide — slow fall while touching wall; otherwise extra gravity
+    // when falling for a snappier, Mario-like jump arc
     if (this.onWall && !onGround && body.velocity.y > 0) {
       body.setGravityY(-900 + WALL_SLIDE_GRAVITY);
       if (body.velocity.y > 80) body.setVelocityY(80);
       this._emitDust();
+    } else if (!onGround && body.velocity.y > 0) {
+      body.setGravityY(FALL_GRAVITY_BONUS);
     } else {
       body.setGravityY(0);
     }
@@ -220,26 +238,41 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       return;
     }
 
-    // ── Horizontal movement ──────────────────────────────────────
+    // ── Horizontal movement (acceleration + momentum) ────────────
     const left  = input.left;
     const right = input.right;
     const run   = input.run;
+    this._jumpHeldNow = input.jumpHeld;
 
-    let speed = this.isCrouching ? CROUCH_SPEED : (run ? PLAYER_RUN_SPEED : PLAYER_SPEED);
+    const targetSpeed = this.isCrouching ? CROUCH_SPEED : (run ? PLAYER_RUN_SPEED : PLAYER_SPEED);
+    const dt  = delta / 1000;
+    const dir = (left && !right) ? -1 : (right && !left) ? 1 : 0;
+    let vx = body.velocity.x;
 
-    if (left && !right) {
-      body.setVelocityX(-speed);
-      this.setFlipX(true);
-      this.facingRight = false;
-    } else if (right && !left) {
-      body.setVelocityX(speed);
-      this.setFlipX(false);
-      this.facingRight = true;
+    if (dir !== 0) {
+      const turning = vx * dir < -1;
+      // Skid: reversing at speed on the ground
+      if (turning && onGround && Math.abs(vx) > SKID_MIN_SPEED) {
+        if (!this._skidding) { this._skidding = true; SFX.skid(); }
+        this._emitDust();
+      } else if (!turning) {
+        this._skidding = false;
+      }
+      const accel = (turning ? PLAYER_TURN_ACCEL : PLAYER_ACCEL) * (onGround ? 1 : PLAYER_AIR_CONTROL);
+      vx += dir * accel * dt;
+      // Don't exceed target speed; if faster (e.g. released run), ease down
+      if (!turning && Math.abs(vx) > targetSpeed) {
+        vx = dir * Math.max(targetSpeed, Math.abs(vx) - PLAYER_FRICTION * dt);
+      }
+      this.setFlipX(dir < 0);
+      this.facingRight = dir > 0;
     } else {
-      const friction = onGround ? 0.72 : 0.88;
-      body.setVelocityX(body.velocity.x * friction);
-      if (Math.abs(body.velocity.x) < 5) body.setVelocityX(0);
+      this._skidding = false;
+      const friction = onGround ? PLAYER_FRICTION : PLAYER_AIR_DRAG;
+      const mag = Math.max(0, Math.abs(vx) - friction * dt);
+      vx = Math.sign(vx) * mag;
     }
+    body.setVelocityX(vx);
 
     // ── Wall jump ─────────────────────────────────────────────────
     if (this.onWall && !onGround && this.jumpBufferTimer > 0 && this.wallDir !== this._lastWallSide) {
@@ -262,10 +295,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this._doJump();
     }
 
-    // Variable jump height — release early = shorter arc
-    if (!input.jumpHeld && body.velocity.y < -100) {
-      body.setVelocityY(body.velocity.y + 32);
+    // Variable jump height — releasing early cuts the jump once
+    // (single cut is frame-rate independent, unlike per-frame damping)
+    if (!input.jumpHeld && body.velocity.y < -120 && !this._jumpCut) {
+      body.setVelocityY(body.velocity.y * 0.45);
+      this._jumpCut = true;
     }
+    if (onGround) this._jumpCut = false;
 
     // ── Fireball ─────────────────────────────────────────────────
     if (this.state === PLAYER_STATE.FIRE && input.fireJustDown) {
@@ -316,7 +352,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   _doJump() {
-    const jv = this.state === PLAYER_STATE.SMALL ? PLAYER_JUMP_VEL : PLAYER_JUMP_VEL - 30;
+    let jv = this.state === PLAYER_STATE.SMALL ? PLAYER_JUMP_VEL : PLAYER_JUMP_VEL - 30;
+    // Running jumps go higher, like Mario
+    jv -= Math.abs(this.body.velocity.x) * JUMP_SPEED_BONUS;
+    this._jumpCut = false;
     this.body.setVelocityY(jv);
     this.coyoteTimer = 0;
     this.jumpBufferTimer = 0;
@@ -348,12 +387,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   _updateAnimation(onGround, moving) {
     const prefix = this.state === PLAYER_STATE.SMALL ? 'nova_small' :
                    this.state === PLAYER_STATE.FIRE  ? 'nova_fire' : 'nova_big';
+    const s = this.skinSfx;
     if (!onGround) {
-      if (this.anims.currentAnim?.key !== `${prefix}_jump`) this.play(`${prefix}_jump`, true);
+      if (this.anims.currentAnim?.key !== `${prefix}_jump${s}`) this.play(`${prefix}_jump${s}`, true);
     } else if (moving) {
-      if (this.anims.currentAnim?.key !== `${prefix}_walk`) this.play(`${prefix}_walk`, true);
+      if (this.anims.currentAnim?.key !== `${prefix}_walk${s}`) this.play(`${prefix}_walk${s}`, true);
     } else {
-      if (this.anims.currentAnim?.key !== `${prefix}_idle`) this.play(`${prefix}_idle`, true);
+      if (this.anims.currentAnim?.key !== `${prefix}_idle${s}`) this.play(`${prefix}_idle${s}`, true);
     }
   }
 
@@ -419,7 +459,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   stompBounce() {
-    this.body.setVelocityY(PLAYER_JUMP_VEL * 0.6);
+    // Holding jump on impact bounces higher — chain stomps like Mario
+    this.body.setVelocityY(PLAYER_JUMP_VEL * (this._jumpHeldNow ? 0.95 : 0.55));
+    this._jumpCut = false;
     this.stomboCombo++;
     if (this.stomboCombo >= 4) this.hasMaxCombo4 = true;
     QuestSystem.trackStat('totalEnemiesStomped');

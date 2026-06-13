@@ -506,17 +506,18 @@ const SPRITES = {
   ],
 };
 
-function drawSprite(scene, key, rows) {
+function drawSprite(scene, key, rows, paletteOverride = null) {
   const cols = Math.max(...rows.map(r => r.length));
   const h = rows.length;
   const rt = scene.add.renderTexture(0, 0, cols, h);
   const g = scene.add.graphics();
+  const pal = paletteOverride ? { ...P, ...paletteOverride } : P;
 
   rows.forEach((row, ry) => {
     for (let rx = 0; rx < row.length; rx++) {
       const ch = row[rx];
       if (ch === '_' || ch === ' ') continue;
-      const color = P[ch];
+      const color = pal[ch];
       if (color === undefined || color === 0) continue;
       g.fillStyle(color, 1);
       g.fillRect(rx, ry, 1, 1);
@@ -527,6 +528,18 @@ function drawSprite(scene, key, rows) {
   rt.saveTexture(key);
   g.destroy();
   rt.destroy();
+}
+
+/** Generate palette-swapped player sprites for every purchasable skin.
+ *  Texture keys: `${spriteKey}_${skinId}` (classic keeps the original keys). */
+export function generatePlayerSkins(scene, skins) {
+  const novaKeys = Object.keys(SPRITES).filter(k => k.startsWith('nova_'));
+  for (const skin of skins) {
+    if (!skin.colors) continue; // classic = original palette
+    for (const key of novaKeys) {
+      drawSprite(scene, `${key}_${skin.id}`, SPRITES[key], skin.colors);
+    }
+  }
 }
 
 export function generateAllTextures(scene) {

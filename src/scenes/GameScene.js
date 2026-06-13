@@ -42,6 +42,13 @@ export default class GameScene extends Phaser.Scene {
     this._coinScoreMult = (data.daily?.coinScoreMult) || 1;
     this._levelStartTime= Date.now();
     this._speedrunBest  = SaveSystem.getLevel(this.currentWorld, this.currentLevel)?.bestTime || null;
+    this._startCoins    = this.coins;
+    // Snapshot for instant retry (R) — rewinds to the state at level start
+    this._initData = {
+      world: this.currentWorld, level: this.currentLevel,
+      lives: this.lives, score: this.score, coins: this.coins,
+      daily: this._dailyCfg,
+    };
   }
 
   create() {
@@ -106,6 +113,8 @@ export default class GameScene extends Phaser.Scene {
     this.fireKey  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
     this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
     this.pauseKey.on('down', () => this._togglePause());
+    this.restartKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    this.restartKey.on('down', () => this._quickRestart());
 
     this._input = new InputManager(this);
     this._buildTouchControls();
@@ -677,6 +686,7 @@ export default class GameScene extends Phaser.Scene {
         score: this.score, coins: this.coins, lives: this.lives,
         stars, timeBonus, heightBonus,
         clearPct, isNewBest, elapsed,
+        coinsEarned: Math.max(0, this.coins - this._startCoins),
         daily: this._dailyCfg,
       });
     });
@@ -730,6 +740,7 @@ export default class GameScene extends Phaser.Scene {
     this.coins += amount;
     SaveSystem.set('coins', this.coins);
     SaveSystem.incrementStat('totalCoinsEver', amount);
+    SaveSystem.incrementStat('coinBank', amount); // feeds the skin-shop vault
     QuestSystem.trackStat('totalCoinsEver');
     this.uiScene?.updateCoins(this.coins);
     if (this.coins > 0 && this.coins % 100 === 0) {
@@ -744,6 +755,15 @@ export default class GameScene extends Phaser.Scene {
     const ep = this._totalEnemies > 0 ? this._killedEnemies / this._totalEnemies : 1;
     const cp = this._totalCoins   > 0 ? this._collectedCoins / this._totalCoins  : 1;
     this.uiScene?.updateCompletion(Math.round((ep + cp) / 2 * 100));
+  }
+
+  // ── Quick restart (R) — "one more try" without menus ─────────
+
+  _quickRestart() {
+    if (this._levelComplete || this._gamePaused || !this._introComplete) return;
+    stopMusic();
+    this.scene.stop(SCENES.UI);
+    this.scene.restart(this._initData);
   }
 
   // ── Pause ─────────────────────────────────────────────────────

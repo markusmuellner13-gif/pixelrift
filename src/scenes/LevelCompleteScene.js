@@ -1,4 +1,4 @@
-import { SCENES, WORLDS, LEVELS_PER_WORLD, FONT } from '../config.js';
+import { SCENES, WORLDS, LEVELS_PER_WORLD, FONT, SKINS } from '../config.js';
 import { SFX, playMusic } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
 import SupabaseLeaderboard from '../systems/SupabaseLeaderboard.js';
@@ -58,27 +58,45 @@ export default class LevelCompleteScene extends Phaser.Scene {
     }
 
     // Score breakdown
+    const bank = SaveSystem.get('coinBank') || 0;
     const rows = [
       ['SCORE',      d.score.toLocaleString()],
       ['TIME BONUS', `+${(d.timeBonus   || 0).toLocaleString()}`],
       ['HT BONUS',   `+${(d.heightBonus || 0).toLocaleString()}`],
+      ['VAULT',      `+${(d.coinsEarned || 0)} 🪙 → ${bank.toLocaleString()}`],
       ['LIVES',      `x ${d.lives}`],
     ];
     rows.forEach(([label, val], i) => {
-      this.add.text(width / 2 - 70, 110 + i * 16, label, {
+      this.add.text(width / 2 - 70, 108 + i * 13, label, {
         fontSize: '8px', fontFamily: FONT, color: '#ccccff',
       });
-      this.add.text(width / 2 + 70, 110 + i * 16, val, {
+      this.add.text(width / 2 + 70, 108 + i * 13, val, {
         fontSize: '8px', fontFamily: FONT, color: '#ffffff',
       }).setOrigin(1, 0);
     });
 
-    this.add.rectangle(width / 2, 178, 200, 1, 0x444466);
+    this.add.rectangle(width / 2, 176, 200, 1, 0x444466);
 
     const hs = SaveSystem.get('highScore') || 0;
-    this.add.text(width / 2, 183, `BEST: ${hs.toLocaleString()}`, {
+    this.add.text(width / 2, 182, `BEST: ${hs.toLocaleString()}`, {
       fontSize: '8px', fontFamily: FONT, color: '#ffaaaa',
     }).setOrigin(0.5);
+
+    // Next skin unlock teaser — the "one more level" hook
+    const owned = SaveSystem.get('ownedSkins') || ['classic'];
+    const nextSkin = SKINS.find(s => s.price > 0 && !owned.includes(s.id));
+    if (nextSkin) {
+      const pct = Phaser.Math.Clamp(bank / nextSkin.price, 0, 1);
+      const barW = 160;
+      this.add.rectangle(width / 2, 193, barW, 6, 0x222244).setStrokeStyle(1, 0x444466);
+      if (pct > 0) this.add.rectangle(width / 2 - barW / 2 + (barW * pct) / 2, 193, barW * pct, 4, 0xffd700);
+      const msg = pct >= 1
+        ? `'${nextSkin.name}' SKIN UNLOCKABLE IN THE SHOP!`
+        : `'${nextSkin.name}' SKIN: ${bank.toLocaleString()} / ${nextSkin.price.toLocaleString()} 🪙`;
+      this.add.text(width / 2, 202, msg, {
+        fontSize: '7px', fontFamily: FONT, color: pct >= 1 ? '#55ff88' : '#ffdd77',
+      }).setOrigin(0.5);
+    }
 
     // Action buttons
     const nextWorld = d.level === LEVELS_PER_WORLD ? d.world + 1 : d.world;
@@ -92,7 +110,7 @@ export default class LevelCompleteScene extends Phaser.Scene {
     if (d.daily) btns.push({ label: '📊 LEADERBOARD', fn: () => this.scene.start(SCENES.LEADERBOARD) });
 
     btns.forEach((b, i) => {
-      const txt = this.add.text(width / 2, 196 + i * 22, b.label, {
+      const txt = this.add.text(width / 2, 212 + i * 18, b.label, {
         fontSize: '10px', fontFamily: FONT,
         color: '#ffffff', stroke: '#000', strokeThickness: 2,
       }).setOrigin(0.5).setInteractive({ useHandCursor: true });
@@ -104,9 +122,9 @@ export default class LevelCompleteScene extends Phaser.Scene {
     // Auto-next countdown
     if (hasNext) {
       let cd = 7;
-      const at = this.add.text(width / 2, height - 10, `AUTO NEXT IN ${cd}s`, {
+      const at = this.add.text(width - 8, 8, `AUTO NEXT IN ${cd}s`, {
         fontSize: '7px', fontFamily: FONT, color: '#445566',
-      }).setOrigin(0.5);
+      }).setOrigin(1, 0);
       this.time.addEvent({
         delay: 1000, repeat: 6,
         callback: () => {

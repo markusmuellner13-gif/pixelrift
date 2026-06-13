@@ -68,6 +68,9 @@ export const SFX = {
   wall_jump()   { beep(400,0.04,'square',0.25); beep(600,0.08,'square',0.2,0.04); },
   crouch()      { beep(200,0.05,'square',0.15); },
   slide()       { beep(150,0.06,'sawtooth',0.12); },
+  skid()        { beep(220,0.07,'sawtooth',0.15); beep(160,0.05,'sawtooth',0.1,0.05); },
+  buy()         { [523,659,784,1047,1319].forEach((f,i) => beep(f,0.08,'square',0.3,i*0.06)); haptic([20,10,40]); },
+  streak()      { [659,784,988,1319].forEach((f,i) => beep(f,0.1,'square',0.3,i*0.08)); haptic([30,15,60]); },
   boss_hit()    { beep(180,0.08,'sawtooth',0.5); beep(90,0.15,'sawtooth',0.35,0.08); haptic([40,20,80]); },
   boss_die()    { [880,660,440,330,220].forEach((f,i) => beep(f,0.2,'sawtooth',0.4,i*0.1));
                   [1047,784,523,392,262].forEach((f,i) => beep(f,0.15,'square',0.3,i*0.12+0.05));

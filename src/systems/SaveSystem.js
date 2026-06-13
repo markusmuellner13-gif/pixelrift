@@ -21,6 +21,12 @@ const DEFAULT = {
   totalJumps: 0,
   totalCoinsEver: 0,
   totalEnemiesStomped: 0,
+  // Meta-progression (v1.4)
+  coinBank: 0,                 // spendable vault — every coin collected goes here
+  ownedSkins: ['classic'],
+  selectedSkin: 'classic',
+  streak: 0,                   // consecutive days played
+  lastPlayDate: null,          // local YYYY-MM-DD of last play
 };
 
 function checksum(data) {

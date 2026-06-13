@@ -1,5 +1,5 @@
-import { SCENES, FONT } from '../config.js';
-import { generateAllTextures, generateIconCanvas } from '../graphics/TextureGenerator.js';
+import { SCENES, FONT, SKINS } from '../config.js';
+import { generateAllTextures, generatePlayerSkins, generateIconCanvas } from '../graphics/TextureGenerator.js';
 import { initAudio } from '../systems/AudioSystem.js';
 import SaveSystem from '../systems/SaveSystem.js';
 
@@ -10,6 +10,7 @@ export default class BootScene extends Phaser.Scene {
     SaveSystem.load();
     initAudio();
     generateAllTextures(this);
+    generatePlayerSkins(this, SKINS);
     this._generateIcons();
 
     const { width, height } = this.scale;
